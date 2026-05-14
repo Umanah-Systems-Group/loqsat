@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>LoqSat | The Coordination Layer for Space</title>
+<meta name="description" content="LoqSat is a commercially operated, neutral coordination infrastructure for on-orbit spacecraft operators. Open architecture. Standardized interfaces. Auditable by design.">
+<meta name="author" content="LoqSat">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#090C10">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23090C10'/><text x='50' y='.78em' font-size='56' text-anchor='middle' fill='%23F5A623'>LQ</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+:root {
+  --bg:       #090C10;
+  --surface:  #0E1218;
+  --card:     #131820;
+  --card2:    #181E28;
+  --rule:     rgba(255,255,255,0.07);
+  --rule2:    rgba(255,255,255,0.04);
+  --muted:    rgba(255,255,255,0.58);
+  --body:     rgba(255,255,255,0.72);
+  --light:    rgba(255,255,255,0.92);
+  --white:    #F0F4F8;
+  --accent:   #F5A623;
+  --accent2:  #C47D0E;
+  --accent3:  rgba(245,166,35,0.08);
+  --gold:     #F5A623;
+  --cta:      #F5A623;
+  --cta2:     #C47D0E;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;font-size:16px;}
+body{background:var(--bg);color:rgba(255,255,255,0.9);font-family:'DM Sans',sans-serif;font-weight:300;line-height:1.7;overflow-x:hidden;}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;}
+.grid-lines{position:fixed;inset:0;background-image:linear-gradient(rgba(245,166,35,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(245,166,35,0.025) 1px,transparent 1px);background-size:80px 80px;pointer-events:none;z-index:0;}
+.page-wrap{max-width:1120px;margin:0 auto;position:relative;border-left:1px solid var(--rule);border-right:1px solid var(--rule);overflow:hidden;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(36px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-16px);}to{opacity:1;transform:translateY(0);}}
+@keyframes pulse{0%,100%{opacity:0.6;}50%{opacity:1;}}
+@keyframes glow{0%,100%{text-shadow:0 0 20px rgba(245,166,35,0.0);}50%{text-shadow:0 0 60px rgba(245,166,35,0.25),0 0 120px rgba(245,166,35,0.1);}}
+@keyframes orbit{0%{transform:rotate(0deg) translateX(90px) rotate(0deg);}100%{transform:rotate(360deg) translateX(90px) rotate(-360deg);}}
+@keyframes counterUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+nav{position:fixed;top:0;left:0;right:0;z-index:500;background:rgba(9,12,16,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--rule);animation:slideDown 0.6s ease both;display:flex;justify-content:center;}
+.nav-inner{width:100%;max-width:1120px;display:flex;align-items:center;justify-content:space-between;padding:20px 48px;transition:padding 0.3s ease;}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.12em;color:var(--white);text-decoration:none;transition:color 0.2s;display:flex;align-items:center;gap:8px;}
+.nav-logo-mark{width:26px;height:26px;border:1px solid var(--accent);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.nav-logo-mark::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(245,166,35,0.15),transparent);}
+.nav-logo-mark span{font-family:'Bebas Neue',sans-serif;font-size:14px;color:var(--accent);position:relative;z-index:1;}
+.nav-logo:hover{color:var(--accent);}
+.nav-links{display:flex;gap:36px;list-style:none;}
+.nav-links a{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.78);text-decoration:none;transition:color 0.2s;position:relative;}
+.nav-links a::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:1px;background:var(--accent);transition:width 0.3s ease;}
+.nav-links a:hover{color:#fff;}
+.nav-links a:hover::after{width:100%;}
+.nav-cta{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--bg);background:var(--cta);padding:10px 22px;text-decoration:none;font-weight:500;transition:background 0.2s,transform 0.15s,box-shadow 0.2s;}
+.nav-cta:hover{background:var(--cta2);transform:translateY(-1px);box-shadow:0 4px 20px rgba(245,166,35,0.3);}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px;}
+.hamburger span{display:block;width:24px;height:1px;background:var(--light);transition:all 0.3s;}
+.mobile-menu{display:none;position:fixed;top:60px;left:0;right:0;background:rgba(9,12,16,0.98);border-bottom:1px solid var(--rule);padding:28px 24px;z-index:499;flex-direction:column;align-items:center;gap:24px;}
+.mobile-menu.open{display:flex;}
+.mobile-menu a{font-family:'DM Mono',monospace;font-size:12px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.8);text-decoration:none;transition:color 0.2s;}
+.mobile-menu a:hover{color:var(--accent);}
+.mobile-menu .nav-cta{margin-top:8px;color:var(--bg);}
+.accent-bar{height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);position:relative;z-index:1;}
+
+/* HERO */
+#hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:140px 24px 80px;overflow:hidden;}
+.hero-radial{position:absolute;top:10%;left:50%;transform:translate(-50%,-50%);width:900px;height:900px;background:radial-gradient(ellipse,rgba(245,166,35,0.04) 0%,transparent 65%);pointer-events:none;}
+.hero-radial-2{position:absolute;bottom:-10%;right:-10%;width:500px;height:500px;background:radial-gradient(ellipse,rgba(245,166,35,0.03) 0%,transparent 70%);pointer-events:none;}
+.hero-bg-text{position:absolute;bottom:-40px;left:50%;transform:translateX(-50%);font-family:'Bebas Neue',sans-serif;font-size:clamp(100px,20vw,280px);color:rgba(245,166,35,0.015);letter-spacing:0.06em;line-height:1;pointer-events:none;user-select:none;white-space:nowrap;}
+.hero-orbit{position:absolute;top:50%;left:50%;width:200px;height:200px;margin:-100px 0 0 -100px;border:1px solid rgba(245,166,35,0.06);border-radius:50%;pointer-events:none;}
+.hero-orbit::before{content:'';position:absolute;top:50%;left:50%;width:4px;height:4px;margin:-2px 0 0 -2px;background:var(--accent);border-radius:50%;animation:orbit 8s linear infinite;box-shadow:0 0 8px var(--accent);}
+.hero-orbit-2{position:absolute;top:50%;left:50%;width:340px;height:340px;margin:-170px 0 0 -170px;border:1px solid rgba(245,166,35,0.04);border-radius:50%;pointer-events:none;}
+.hero-orbit-2::before{content:'';position:absolute;top:50%;left:50%;width:3px;height:3px;margin:-1.5px 0 0 -1.5px;background:var(--accent);border-radius:50%;animation:orbit 14s linear infinite reverse;box-shadow:0 0 6px var(--accent);}
+.hero-content{position:relative;z-index:1;max-width:960px;width:100%;display:flex;flex-direction:column;align-items:center;}
+.hero-eyebrow{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.26em;text-transform:uppercase;color:var(--accent);margin-bottom:32px;display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;text-align:center;animation:fadeIn 0.8s ease 0.2s both;}
+.hero-eyebrow::before,.hero-eyebrow::after{content:'';display:block;width:40px;height:1px;background:var(--accent);opacity:0.5;}
+.hero-headline{font-family:'Bebas Neue',sans-serif;font-size:clamp(72px,13vw,165px);line-height:0.88;letter-spacing:0.02em;margin-bottom:36px;color:var(--white);animation:fadeUp 0.9s ease 0.3s both;text-align:center;}
+.hero-headline .acc{color:var(--accent);animation:glow 5s ease-in-out infinite;display:inline-block;}
+.hero-sub{font-size:clamp(15px,1.8vw,18px);color:var(--body);max-width:620px;line-height:1.8;margin-bottom:52px;font-weight:300;text-align:center;animation:fadeUp 0.9s ease 0.48s both;}
+.hero-sub strong{color:var(--light);font-weight:500;}
+.hero-actions{display:flex;gap:16px;align-items:center;justify-content:center;flex-wrap:wrap;animation:fadeUp 0.9s ease 0.62s both;}
+.btn-primary{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--bg);background:var(--cta);padding:16px 40px;text-decoration:none;font-weight:500;transition:background 0.2s,transform 0.15s,box-shadow 0.2s;display:inline-block;}
+.btn-primary:hover{background:var(--cta2);transform:translateY(-2px);box-shadow:0 8px 32px rgba(245,166,35,0.3);}
+.btn-ghost{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--accent);border:1px solid rgba(245,166,35,0.35);padding:16px 40px;text-decoration:none;transition:background 0.2s,color 0.2s,transform 0.15s,border-color 0.2s;display:inline-block;}
+.btn-ghost:hover{background:rgba(245,166,35,0.1);border-color:var(--accent);transform:translateY(-2px);}
+.hero-visual-wrap{width:100%;max-width:960px;margin-top:72px;animation:fadeUp 0.9s ease 0.78s both;}
+.hero-stats{display:flex;margin-top:1px;border:1px solid var(--rule);border-top:none;background:var(--rule);width:100%;gap:1px;}
+.hero-stat{flex:1;padding:22px 16px;background:var(--card);display:flex;flex-direction:column;align-items:center;text-align:center;}
+.hero-stat-num{font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--accent);line-height:1;}
+.hero-stat-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.66);margin-top:6px;line-height:1.5;}
+
+/* SECTIONS */
+.section{position:relative;z-index:1;padding:120px 24px;border-top:1px solid var(--rule);}
+.section-inner{max-width:1072px;margin:0 auto;display:flex;flex-direction:column;align-items:center;}
+.section-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:var(--accent);margin-bottom:24px;display:flex;align-items:center;justify-content:center;gap:14px;}
+.section-label::before,.section-label::after{content:'';display:block;width:36px;height:1px;background:var(--accent);opacity:0.5;}
+h2.section-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(42px,5.5vw,80px);letter-spacing:0.02em;line-height:0.9;margin-bottom:28px;text-align:center;color:var(--white);}
+h2.section-title .acc{color:var(--accent);}
+.section-body{font-size:16px;color:var(--body);max-width:640px;line-height:1.85;margin-bottom:16px;text-align:center;}
+.section-body strong{color:var(--light);font-weight:500;}
+
+/* ORBITAL */
+#orbital{background:var(--bg);border-top:1px solid var(--rule);}
+.orbital-inner{max-width:1072px;margin:0 auto;padding:100px 24px;display:flex;flex-direction:column;align-items:center;}
+.globe-wrap{width:100%;aspect-ratio:16/9;position:relative;border:1px solid var(--rule);overflow:hidden;background:#020406;margin-top:48px;}
+#ibom-globe-canvas{position:absolute;inset:0;width:100%;height:100%;}
+.globe-caption{display:flex;gap:1px;background:var(--rule);border:1px solid var(--rule);border-top:none;width:100%;}
+.globe-cap-cell{flex:1;background:var(--card);padding:16px 20px;display:flex;flex-direction:column;align-items:center;text-align:center;}
+.globe-cap-num{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--accent);line-height:1;}
+.globe-cap-label{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.74);margin-top:5px;line-height:1.5;}
+.globe-hint{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.68);margin-top:16px;opacity:1;text-align:center;}
+
+/* WHAT */
+.what-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule);border:1px solid var(--rule);width:100%;margin-top:56px;}
+.what-card{background:var(--card);padding:48px 40px;display:flex;flex-direction:column;gap:20px;}
+.what-card-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.24em;text-transform:uppercase;color:var(--accent);}
+.what-card-title{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:0.04em;color:var(--white);line-height:1;}
+.what-card-body{font-size:14px;color:var(--body);line-height:1.85;}
+.what-note{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-top:40px;text-align:center;border-top:1px solid var(--rule);padding-top:32px;width:100%;line-height:1.9;}
+
+/* SERVE */
+.serve-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);width:100%;margin-top:56px;}
+.serve-card{background:var(--card);padding:32px 24px;display:flex;flex-direction:column;gap:12px;}
+.serve-num{font-family:'Bebas Neue',sans-serif;font-size:13px;color:var(--accent);letter-spacing:0.1em;}
+.serve-card-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:0.04em;color:var(--white);line-height:1.1;}
+.serve-card-body{font-size:13px;color:var(--body);line-height:1.75;}
+
+/* WHY */
+.why-statement{font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,3.5vw,52px);letter-spacing:0.03em;line-height:1.1;color:var(--white);text-align:center;max-width:860px;margin-top:40px;}
+.why-statement .acc{color:var(--accent);}
+.why-pills{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:48px;}
+.why-pill{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);border:1px solid rgba(245,166,35,0.25);padding:10px 20px;background:var(--accent3);}
+
+/* CONTACT */
+.contact-form{display:flex;flex-direction:column;gap:1px;background:var(--rule);border:1px solid var(--rule);width:100%;max-width:640px;margin-top:52px;}
+.form-field{background:var(--card);display:flex;flex-direction:column;}
+.form-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(245,166,35,0.96);padding:16px 20px 0;font-weight:600;}
+.form-field input,.form-field select,.form-field textarea{background:transparent;border:none;outline:none;color:rgba(255,255,255,0.92);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:300;padding:8px 20px 16px;width:100%;resize:none;-webkit-appearance:none;}
+.form-field select{cursor:pointer;color:rgba(255,255,255,0.92);}
+.form-field select option{background:var(--card2);color:var(--light);}
+.form-field input::placeholder,.form-field textarea::placeholder{color:rgba(255,255,255,0.64);}
+.form-field input:focus,.form-field select:focus,.form-field textarea:focus{background:rgba(245,166,35,0.03);}
+.form-submit{background:var(--card);padding:20px;display:flex;justify-content:center;}
+.form-submit button{width:100%;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:var(--bg);background:var(--cta);border:none;padding:18px 32px;cursor:pointer;font-weight:500;transition:background 0.2s,transform 0.15s,box-shadow 0.2s;}
+.form-submit button:hover{background:var(--cta2);transform:translateY(-1px);box-shadow:0 6px 24px rgba(245,166,35,0.3);}
+.form-submit button:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
+
+/* FOOTER */
+footer{position:relative;z-index:1;border-top:1px solid var(--rule);padding:48px 24px;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;background:var(--surface);}
+.footer-logo{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:0.1em;color:var(--white);display:flex;align-items:center;gap:8px;}
+.footer-logo-mark{width:22px;height:22px;border:1px solid var(--accent);display:flex;align-items:center;justify-content:center;}
+.footer-logo-mark span{font-family:'Bebas Neue',sans-serif;font-size:12px;color:var(--accent);}
+.footer-tagline{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.22em;color:rgba(255,255,255,0.86);text-transform:uppercase;}
+.footer-links{display:flex;align-items:center;gap:12px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.1em;color:rgba(255,255,255,0.68);text-transform:uppercase;}
+.footer-links a{color:rgba(255,255,255,0.8);text-decoration:none;transition:color 0.2s;}
+.footer-links a:hover{color:var(--accent);}
+.footer-copy{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.1em;color:rgba(255,255,255,0.64);text-transform:uppercase;}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(32px);transition:opacity 0.7s ease,transform 0.7s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .nav-inner{padding:16px 20px;}
+  .nav-links,.nav-cta{display:none;}
+  .hamburger{display:flex;}
+  #hero{padding:110px 20px 60px;}
+  .hero-orbit,.hero-orbit-2{display:none;}
+  .orbital-inner{padding:64px 20px;}
+  .globe-wrap{aspect-ratio:4/3;}
+  .globe-caption{flex-wrap:wrap;}
+  .globe-cap-cell{flex:1 1 45%;}
+  .what-grid{grid-template-columns:1fr;}
+  .serve-grid{grid-template-columns:repeat(2,1fr);}
+  .section{padding:80px 20px;}
+  .hero-actions{flex-direction:column;width:100%;}
+  .btn-primary,.btn-ghost{width:100%;text-align:center;}
+  .hero-stats{flex-direction:column;gap:1px;}
+  .hero-stat{width:100%;}
+}
+@media(max-width:480px){
+  .globe-wrap{aspect-ratio:1/1;}
+  .globe-cap-cell{flex:1 1 100%;}
+  .serve-grid{grid-template-columns:1fr;}
+  .hero-eyebrow::before,.hero-eyebrow::after{display:none;}
+}
+</style>
+</head>
+<body>
+<div class="grid-lines"></div>
+<div class="page-wrap">
+<div class="accent-bar"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="#hero" class="nav-logo">
+      <div class="nav-logo-mark"><span>LQ</span></div>
+      LOQSAT
+    </a>
+    <ul class="nav-links">
+      <li><a href="#orbital">The Problem</a></li>
+      <li><a href="#what">What We Do</a></li>
+      <li><a href="#serve">Who We Serve</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <a href="#contact" class="nav-cta">Partner With Us</a>
+    <button class="hamburger" id="hamburger" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#orbital" onclick="closeMobile()">The Problem</a>
+  <a href="#what" onclick="closeMobile()">What We Do</a>
+  <a href="#serve" onclick="closeMobile()">Who We Serve</a>
+  <a href="#contact" onclick="closeMobile()">Contact</a>
+  <a href="#contact" class="nav-cta" onclick="closeMobile()">Partner With Us</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-radial"></div>
+  <div class="hero-radial-2"></div>
+  <div class="hero-bg-text">LOQSAT</div>
+  <div class="hero-orbit"></div>
+  <div class="hero-orbit-2"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Space Coordination Infrastructure</div>
+    <h1 class="hero-headline">
+      <span class="acc">Coordination</span><br>
+      is the<br>
+      Missing Layer.
+    </h1>
+    <p class="hero-sub">
+      LoqSat is a commercially operated, neutral coordination layer for on-orbit spacecraft operators. Open architecture. Standardized interfaces. <strong>Auditable by design.</strong>
+    </p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">Partner With Us →</a>
+      <a href="#orbital" class="btn-ghost">See the Problem</a>
+    </div>
+    <div class="hero-visual-wrap">
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="hero-stat-num">40K</div>
+          <div class="hero-stat-label">Objects Tracked in Orbit</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">1.2M</div>
+          <div class="hero-stat-label">Debris Objects &gt;1 cm</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">50K</div>
+          <div class="hero-stat-label">Avoidance Maneuvers. One Constellation. Six Months.</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">83%</div>
+          <div class="hero-stat-label">Cut to Government Civilian Coordination System</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ORBITAL ENVIRONMENT -->
+<section id="orbital">
+  <div class="orbital-inner">
+    <div class="section-label reveal">The Coordination Problem</div>
+    <h2 class="section-title reveal">COORDINATION IS<br><span class="acc">BROKEN</span> AT SCALE</h2>
+    <p class="section-body reveal">About <strong>40,000 objects</strong> are now tracked in orbit. Over <strong>1.2 million debris objects</strong> larger than 1 cm are estimated to exist. Operators are maneuvering thousands of satellites with no neutral infrastructure, no verified record of agreements, and no scalable coordination layer. The problem is not awareness. The problem is coordination.</p>
+
+    <div class="globe-wrap reveal">
+      <div id="ibom-globe-canvas"></div>
+    </div>
+
+    <div class="globe-caption reveal">
+      <div class="globe-cap-cell">
+        <div class="globe-cap-num">40K</div>
+        <div class="globe-cap-label">Tracked Orbital Objects<br>ESA Space Environment Report 2025</div>
+      </div>
+      <div class="globe-cap-cell">
+        <div class="globe-cap-num">1.2M</div>
+        <div class="globe-cap-label">Debris Objects &gt;1 cm<br>ESA Space Environment Report 2025</div>
+      </div>
+      <div class="globe-cap-cell">
+        <div class="globe-cap-num">50,000</div>
+        <div class="globe-cap-label">Collision Avoidance Maneuvers<br>Single Constellation, Six Months, 2024</div>
+      </div>
+      <div class="globe-cap-cell">
+        <div class="globe-cap-num">83%</div>
+        <div class="globe-cap-label">Cut to Government Civilian<br>Coordination System. Space News, Apr 2026</div>
+      </div>
+    </div>
+    <div class="globe-hint">Drag to rotate &nbsp;·&nbsp; Simulated LEO orbits at 0.01× speed</div>
+  </div>
+</section>
+
+<!-- WHAT WE DO -->
+<section id="what" class="section">
+  <div class="section-inner">
+    <div class="section-label reveal">What LoqSat Does</div>
+    <h2 class="section-title reveal">TWO ROLES.<br>ONE <span class="acc">NEUTRAL</span> LAYER.</h2>
+    <p class="section-body reveal">LoqSat does not generate tracking data or compute collision probabilities. It routes outputs from existing providers through a neutral layer no single operator controls.</p>
+    <div class="what-grid">
+      <div class="what-card reveal">
+        <div class="what-card-label">01 — Gateway</div>
+        <div class="what-card-title">Coordination Gateway</div>
+        <div class="what-card-body">Authenticates participants, routes messages between operators, and maintains an auditable log of every coordination action. Neutral infrastructure. No single operator controls it. Provider substitution requires no operator disruption.</div>
+      </div>
+      <div class="what-card reveal">
+        <div class="what-card-label">02 — Service Layer</div>
+        <div class="what-card-title">Service Layer</div>
+        <div class="what-card-body">Connects spacecraft operators to conjunction assessment data and enables maneuver negotiation. Delivers standardized Conjunction Data Messages in internationally recognized CCSDS format. Every message is routed and logged. Full chain of custody.</div>
+      </div>
+    </div>
+    <p class="what-note reveal">Open architecture &nbsp;·&nbsp; Standardized interfaces &nbsp;·&nbsp; Auditable by design &nbsp;·&nbsp; No single operator controls it</p>
+  </div>
+</section>
+
+<!-- WHO WE SERVE -->
+<section id="serve" class="section" style="background:var(--surface);">
+  <div class="section-inner">
+    <div class="section-label reveal">Who It Serves</div>
+    <h2 class="section-title reveal">BUILT FOR THE<br><span class="acc">ENTIRE</span> ECOSYSTEM</h2>
+    <div class="serve-grid">
+      <div class="serve-card reveal">
+        <div class="serve-num">01</div>
+        <div class="serve-card-title">Spacecraft Operators</div>
+        <div class="serve-card-body">API access to coordination infrastructure. Priced by constellation size with volume scaling.</div>
+      </div>
+      <div class="serve-card reveal">
+        <div class="serve-num">02</div>
+        <div class="serve-card-title">Government and Civil Agencies</div>
+        <div class="serve-card-body">Available through established government procurement vehicles. Fixed-price service rates.</div>
+      </div>
+      <div class="serve-card reveal">
+        <div class="serve-num">03</div>
+        <div class="serve-card-title">Data Suppliers</div>
+        <div class="serve-card-body">Plug into the routing layer as a verified conjunction assessment provider. No operator disruption on substitution.</div>
+      </div>
+      <div class="serve-card reveal">
+        <div class="serve-num">04</div>
+        <div class="serve-card-title">Regulatory and Insurance</div>
+        <div class="serve-card-body">Auditable coordination logs for compliance and liability records as STM frameworks mature.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY IT MATTERS -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-label reveal">Why It Matters</div>
+    <p class="why-statement reveal">Operators today coordinate bilaterally, informally, with <span class="acc">no neutral record</span> of what was agreed. As constellation sizes grow, that approach does not scale.</p>
+    <div class="why-pills reveal">
+      <span class="why-pill">Open Architecture</span>
+      <span class="why-pill">Standardized Interfaces</span>
+      <span class="why-pill">Auditable by Design</span>
+      <span class="why-pill">Neutral Infrastructure</span>
+      <span class="why-pill">No Single Operator Controls It</span>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="section" style="background:var(--surface);">
+  <div class="section-inner">
+    <div class="section-label reveal">Contact</div>
+    <h2 class="section-title reveal">THE CONVERSATION<br>STARTS <span class="acc">HERE</span></h2>
+    <p class="section-body reveal">Whether you are a spacecraft operator, government program office, data supplier, or investor, the right next step is a conversation. Tell us who you are and what you are working on.</p>
+    <form class="contact-form reveal" id="contactForm" action="https://formspree.io/f/xeelnkqj" method="POST">
+      <div class="form-field">
+        <label class="form-label">Full Name</label>
+        <input type="text" name="name" placeholder="Your name" autocomplete="name" required>
+      </div>
+      <div class="form-field">
+        <label class="form-label">Email Address</label>
+        <input type="email" name="email" placeholder="your@email.com" autocomplete="email" required>
+      </div>
+      <div class="form-field">
+        <label class="form-label">Organization</label>
+        <input type="text" name="organization" placeholder="Agency, company, or institution" autocomplete="organization">
+      </div>
+      <div class="form-field">
+        <label class="form-label">I Am A</label>
+        <select name="inquiry_type" required>
+          <option value="" disabled selected>Select one</option>
+          <option>Spacecraft Operator</option>
+          <option>Government / Civil Agency</option>
+          <option>Data Supplier</option>
+          <option>Regulatory / Insurance</option>
+          <option>Investor</option>
+          <option>General Inquiry</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label class="form-label">Message</label>
+        <textarea name="message" rows="5" placeholder="Tell us about your coordination needs or interest in partnering." required></textarea>
+      </div>
+      <div class="form-submit">
+        <button type="submit" id="submitBtn">Send Message →</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<div class="accent-bar"></div>
+<footer>
+  <div class="footer-logo">
+    <div class="footer-logo-mark"><span>LQ</span></div>
+    LOQSAT
+  </div>
+  <div class="footer-tagline">The Coordination Layer for Space</div>
+  <div class="footer-links">
+    <a href="privacy.html">Privacy Policy</a>
+    <span>·</span>
+    <a href="terms.html">Terms of Use</a>
+  </div>
+  <div class="footer-copy">© 2026 LoqSat. All rights reserved.</div>
+</footer>
+
+</div><!-- end page-wrap -->
+
+<script>
+/* MOBILE MENU */
+const hamburger=document.getElementById('hamburger');
+const mobileMenu=document.getElementById('mobileMenu');
+hamburger.addEventListener('click',()=>{mobileMenu.classList.toggle('open');});
+function closeMobile(){mobileMenu.classList.remove('open');}
+
+/* SCROLL REVEAL */
+const revealObs=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      setTimeout(()=>{e.target.classList.add('visible');},Number(e.target.dataset.delay)||0);
+      revealObs.unobserve(e.target);
+    }
+  });
+},{threshold:0.08,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach((el,i)=>{
+  el.dataset.delay=(i%5)*80;
+  revealObs.observe(el);
+});
+
+/* CARD STAGGER */
+const cardObs=new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      const cards=entry.target.querySelectorAll('.what-card,.serve-card,.why-pill');
+      cards.forEach((card,i)=>{
+        card.style.opacity='0';
+        card.style.transform='translateY(20px)';
+        card.style.transition=`opacity 0.55s ease ${i*90}ms,transform 0.55s ease ${i*90}ms`;
+        requestAnimationFrame(()=>{
+          setTimeout(()=>{card.style.opacity='1';card.style.transform='translateY(0)';},60);
+        });
+      });
+      cardObs.unobserve(entry.target);
+    }
+  });
+},{threshold:0.05});
+document.querySelectorAll('.what-grid,.serve-grid,.why-pills').forEach(el=>{cardObs.observe(el);});
+
+/* COUNTER ANIMATION */
+function animateCounter(el,target,suffix){
+  const isFloat=target.toString().includes('.');
+  const duration=1800;const start=performance.now();
+  const startVal=0;
+  function update(now){
+    const elapsed=now-start;
+    const progress=Math.min(elapsed/duration,1);
+    const ease=1-Math.pow(1-progress,3);
+    const current=startVal+(target-startVal)*ease;
+    el.textContent=(isFloat?current.toFixed(1):Math.round(current))+suffix;
+    if(progress<1)requestAnimationFrame(update);
+  }
+  requestAnimationFrame(update);
+}
+const counterObs=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const el=e.target;
+      const raw=el.dataset.count;
+      const suffix=el.dataset.suffix||'';
+      if(raw)animateCounter(el,parseFloat(raw),suffix);
+      counterObs.unobserve(el);
+    }
+  });
+},{threshold:0.5});
+document.querySelectorAll('[data-count]').forEach(el=>counterObs.observe(el));
+
+/* GLOBE INIT */
+(function() {
+  function tryInitGlobe() {
+    if (typeof THREE === 'undefined' || typeof IbomGlobe === 'undefined') {
+      setTimeout(tryInitGlobe, 100); return;
+    }
+    const el = document.getElementById('ibom-globe-canvas');
+    if (!el) return;
+    const obs = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        IbomGlobe.init('ibom-globe-canvas');
+        obs.disconnect();
+      }
+    }, { threshold: 0.1 });
+    obs.observe(el);
+  }
+  tryInitGlobe();
+})();
+
+window.addEventListener('scroll',()=>{
+  const nav=document.querySelector('nav');
+  const inner=document.querySelector('.nav-inner');
+  if(window.scrollY>60){
+    nav.style.background='rgba(9,12,16,0.97)';
+    if(inner)inner.style.padding='12px 48px';
+  }else{
+    nav.style.background='rgba(9,12,16,0.92)';
+    if(inner)inner.style.padding='20px 48px';
+  }
+});
+
+/* FORMSPREE */
+const contactForm=document.getElementById('contactForm');
+const submitBtn=document.getElementById('submitBtn');
+if(contactForm){
+  contactForm.addEventListener('submit',async function(e){
+    e.preventDefault();
+    submitBtn.disabled=true;
+    submitBtn.textContent='Sending...';
+    try{
+      const res=await fetch('https://formspree.io/f/xeelnkqj',{
+        method:'POST',
+        body:new FormData(contactForm),
+        headers:{'Accept':'application/json'}
+      });
+      if(res.ok){window.location.href='/thanks.html';}
+      else{
+        submitBtn.disabled=false;
+        submitBtn.textContent='Send Message →';
+        alert('Something went wrong. Please try again.');
+      }
+    }catch(err){
+      submitBtn.disabled=false;
+      submitBtn.textContent='Send Message →';
+      alert('Network error. Please check your connection and try again.');
+    }
+  });
+}
+</script>
+<script src="ibom-globe.js"></script>
+
+</body>
+</html>
