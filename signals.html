@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en" class="js">
+<head>
+<meta name="description" content="LoqSat Earth Signals: weekly harvest, river and mine measurements from free satellite imagery.">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono:wght@400&display=swap">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="styles.css">
+<title>Earth Signals | LoqSat</title></head><body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="nav">
+  <div class="container">
+    <a class="wordmark" href="index.html">LoqSat</a>
+    <nav aria-label="Main"><ul>
+      <li><a href="index.html#how">How it works</a></li>
+      <li><a href="index.html#platform">Capabilities</a></li>
+      <li><a href="index.html#who">Who it serves</a></li>
+      <li><a href="signals.html" aria-current="page">Earth Signals</a></li>
+      <li><a href="government.html">For government</a></li>
+    </ul></nav>
+    <a class="btn" href="index.html#contact">Request a demo</a>
+  </div>
+</header>
+<main id="main">
+  <section class="page-head"><div class="container">
+    <h1>Earth Signals</h1>
+    <p class="lead">Weekly measurements of harvests, rivers and mines, history back to 2015.</p>
+  </div></section>
+
+  <section class="section" aria-labelledby="cane-h"><div class="container">
+    <div class="section-head"><h2 id="cane-h">Sugar cane harvest, measured from orbit.</h2><p>Share of standing cane cut so far, one Sentinel-2 tile east of Ribeirão Preto, 2024 season.</p></div>
+    <figure class="chart ticks">
+      <p class="readout" id="readout" aria-live="polite">Move across the chart to read a date.</p>
+      <svg id="harvest" viewBox="0 0 960 360" role="img" aria-label="Harvest share rises from 0 percent in March to 66 percent by late November 2024, fastest from July to mid September."></svg>
+      <figcaption class="label" style="margin-top:var(--space-sm)">Prototype measurement on tile 23KKS, cloud-free looks only. Not yet checked against UNICA crush reports; no crop mask, so the share is diluted by pasture.</figcaption>
+    </figure>
+  </div></section>
+
+  <section class="section" aria-labelledby="cov-h"><div class="container">
+    <div class="section-head"><h2 id="cov-h">Coverage</h2><p>A signal is listed as live only once it ships every week.</p></div>
+    <div class="list-rows">
+      <div><h3>Brazil sugar cane</h3><p class="muted">Center-South harvest progress, checked against UNICA</p><span class="state live">Prototype</span></div>
+      <div><h3>Orange juice</h3><p class="muted">São Paulo and Florida citrus belts</p><span class="state">Planned</span></div>
+      <div><h3>Coffee and cocoa</h3><p class="muted">Minas Gerais, Ivory Coast, Ghana</p><span class="state">Planned</span></div>
+      <div><h3>Paraná and Paraguay rivers</h3><p class="muted">Water level and barge loading</p><span class="state">Planned</span></div>
+      <div><h3>China hydropower</h3><p class="muted">Yunnan and Sichuan reservoirs</p><span class="state">Planned</span></div>
+      <div><h3>Lithium brine</h3><p class="muted">Evaporation pond area in the lithium triangle</p><span class="state">Planned</span></div>
+      <div><h3>Rare earth activity</h3><p class="muted">Mine and processing activity index</p><span class="state">Planned</span></div>
+      <div><h3>Rice</h3><p class="muted">Planted area and crop stage in the main export basins</p><span class="state">Planned</span></div>
+      <div><h3>Flood and wildfire footprints</h3><p class="muted">Mapped extent after an event, for insurers and reinsurers</p><span class="state">Planned</span></div>
+    </div>
+  </div></section>
+  <section class="section" aria-labelledby="how-h"><div class="container">
+    <div class="section-head"><h2 id="how-h">How it reaches you.</h2><p>No dashboard to log into. The numbers arrive where you already work.</p></div>
+    <div class="rows">
+      <div><h3>Weekly data files</h3><p>One file per signal, every week, with the full history back to 2015, when Sentinel-2 started.</p></div>
+      <div><h3>A short weekly report</h3><p>One chart and one line per signal: what moved and by how much.</p></div>
+      <div><h3>Historical sample and trial</h3><p>Funds and trading desks can test a signal against their own models before buying.</p></div>
+      <div><h3>Free, public imagery</h3><p>Copernicus Sentinel and Landsat, so every number can be traced to a picture.</p></div>
+    </div>
+  </div></section>
+</main>
+
+<section class="close" id="brief" aria-labelledby="brief-h"><div class="container">
+  <div style="display:grid;gap:var(--space-md);align-content:start">
+    <h2 id="brief-h">The free weekly brief.</h2>
+    <p class="muted">One chart and one line, every week. Funds and trading desks can ask for a historical sample and a trial.</p>
+  </div>
+  <form class="form" action="https://formspree.io/f/xeelnkqj" method="POST">
+    <input type="hidden" name="list" value="Earth Signals weekly brief">
+    <div class="field"><label for="f-name">Full name</label><input id="f-name" name="name" autocomplete="name" required></div>
+    <div class="field"><label for="f-email">Work email</label><input id="f-email" name="email" type="email" autocomplete="email" required></div>
+    <div class="field wide"><button class="btn btn--primary" type="submit">Subscribe</button></div>
+    <p class="status" role="status"></p>
+  </form>
+</div></section>
+<footer class="footer">
+  <div class="container">
+    <p class="letter">LoqSat, the coordination layer for space.</p>
+    <div class="cols">
+      <ul><li><a href="index.html#how">How it works</a></li><li><a href="index.html#platform">Capabilities</a></li><li><a href="signals.html">Earth Signals</a></li><li><a href="government.html">For government</a></li><li><a href="index.html#contact">Contact</a></li><li><a href="privacy.html">Privacy policy</a></li><li><a href="terms.html">Terms of use</a></li></ul>
+      <p class="muted">Contains modified Copernicus Sentinel data, 2024. © 2026 LoqSat.</p>
+    </div>
+  </div>
+</footer>
+<script>
+const DATA = [["2024-03-19", 0.0], ["2024-04-03", 0.0027], ["2024-04-08", 0.0047], ["2024-04-13", 0.0087], ["2024-04-23", 0.0208], ["2024-04-28", 0.0268], ["2024-05-03", 0.0332], ["2024-05-08", 0.0408], ["2024-05-13", 0.0484], ["2024-05-18", 0.0581], ["2024-05-23", 0.0666], ["2024-06-02", 0.0821], ["2024-06-07", 0.0948], ["2024-06-12", 0.1044], ["2024-06-17", 0.1182], ["2024-06-22", 0.1417], ["2024-06-27", 0.1566], ["2024-07-02", 0.1704], ["2024-07-07", 0.1908], ["2024-07-12", 0.2174], ["2024-07-17", 0.2288], ["2024-07-22", 0.2437], ["2024-08-01", 0.3169], ["2024-08-06", 0.3367], ["2024-08-11", 0.3425], ["2024-08-16", 0.4251], ["2024-08-21", 0.4486], ["2024-08-31", 0.507], ["2024-09-05", 0.6289], ["2024-09-10", 0.6305], ["2024-09-15", 0.6421], ["2024-09-20", 0.6446], ["2024-09-30", 0.6473], ["2024-10-05", 0.652], ["2024-10-30", 0.6563], ["2024-11-19", 0.658], ["2024-11-24", 0.658]];
+(function () {
+  const svg = document.getElementById('harvest'), out = document.getElementById('readout');
+  const W = 960, H = 360, L = 56, Rr = 20, T = 20, B = 40;
+  const t0 = Date.parse('2024-03-15'), t1 = Date.parse('2024-12-01');
+  const x = (d) => L + (Date.parse(d) - t0) / (t1 - t0) * (W - L - Rr), y = (v) => T + (1 - v / 0.8) * (H - T - B);
+  const ns = 'http://www.w3.org/2000/svg', el = (n, a) => { const e = document.createElementNS(ns, n); for (const k in a) e.setAttribute(k, a[k]); svg.appendChild(e); return e; };
+  [0, 0.2, 0.4, 0.6, 0.8].forEach((v) => { el('line', { x1: L, x2: W - Rr, y1: y(v), y2: y(v), stroke: 'var(--color-rule-2)' }); const t = el('text', { x: L - 10, y: y(v) + 4, 'text-anchor': 'end', fill: 'var(--color-muted)', 'font-family': 'var(--font-outlier)', 'font-size': 12 }); t.textContent = Math.round(v * 100) + '%'; });
+  ['2024-04-01', '2024-06-01', '2024-08-01', '2024-10-01', '2024-12-01'].forEach((d) => { const t = el('text', { x: x(d), y: H - 14, 'text-anchor': 'middle', fill: 'var(--color-muted)', 'font-family': 'var(--font-outlier)', 'font-size': 12 }); t.textContent = new Date(d).toLocaleString('en-US', { month: 'short', timeZone: 'UTC' }); });
+  const pts = DATA.map(([d, v]) => [x(d), y(v)]);
+  el('path', { d: 'M' + pts.map((p) => p.join(',')).join(' L') + ' L' + pts[pts.length - 1][0] + ',' + y(0) + ' L' + pts[0][0] + ',' + y(0) + ' Z', fill: 'var(--color-accent)', opacity: 0.12 });
+  el('path', { d: 'M' + pts.map((p) => p.join(',')).join(' L'), fill: 'none', stroke: 'var(--color-accent)', 'stroke-width': 2 });
+  const last = pts[pts.length - 1]; el('rect', { x: last[0] - 4, y: last[1] - 4, width: 8, height: 8, fill: 'var(--color-accent)' });
+  const cur = el('line', { y1: T, y2: H - B, stroke: 'var(--color-muted-2)', visibility: 'hidden' });
+  const dot = el('rect', { width: 8, height: 8, fill: 'var(--color-ink)', visibility: 'hidden' });
+  const fmt = (d) => new Date(d).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+  function show(px) { let i = 0, bd = 1e9; pts.forEach((p, j) => { const dd = Math.abs(p[0] - px); if (dd < bd) { bd = dd; i = j; } }); const p = pts[i]; cur.setAttribute('x1', p[0]); cur.setAttribute('x2', p[0]); dot.setAttribute('x', p[0] - 4); dot.setAttribute('y', p[1] - 4); cur.setAttribute('visibility', 'visible'); dot.setAttribute('visibility', 'visible'); out.textContent = fmt(DATA[i][0]) + '   ' + (DATA[i][1] * 100).toFixed(1) + '% harvested'; }
+  svg.addEventListener('pointermove', (e) => { const r = svg.getBoundingClientRect(); show((e.clientX - r.left) / r.width * W); });
+  svg.setAttribute('tabindex', '0'); let k = DATA.length - 1;
+  svg.addEventListener('keydown', (e) => { if (e.key === 'ArrowLeft') k = Math.max(0, k - 1); else if (e.key === 'ArrowRight') k = Math.min(DATA.length - 1, k + 1); else return; e.preventDefault(); show(pts[k][0]); });
+})();
+document.querySelectorAll('form[action]').forEach((f) => f.addEventListener('submit', async (e) => {
+  e.preventDefault(); const em = f.querySelector('[type=email]'), st = f.querySelector('.status');
+  const ok = em.value.trim() && em.checkValidity(); em.setAttribute('aria-invalid', !ok);
+  if (!ok) { st.textContent = 'Add a valid work email, then subscribe again.'; return; }
+  st.textContent = 'Sending…';
+  try { const r = await fetch(f.action, { method: 'POST', body: new FormData(f), headers: { Accept: 'application/json' } });
+    st.textContent = r.ok ? 'Thanks. You are on the list for the weekly brief.' : 'That did not go through. Please try again.'; if (r.ok) f.reset(); }
+  catch (err) { st.textContent = 'That did not go through from this preview. On loqsat.com it reaches our inbox.'; }
+}));
+</script>
+</body></html>
