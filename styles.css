@@ -281,12 +281,22 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 
 /* signals */
 .signals-grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--space-xl); align-items: stretch; }
-.signals-grid .photo { margin: 0; align-self: start; }
-.signal-list { display: grid; gap: var(--space-md); align-content: start; }
+/* the photo sets the row's height (16:10); the column beside it fills that height with its button on the photo's
+   bottom line. If the text is ever taller (narrow desktops), the photo stretches with it (object-fit: cover). */
+.signals-grid .photo { margin: 0; align-self: stretch; }
+.signal-list { display: flex; flex-direction: column; gap: var(--space-md); min-width: 0; }
+.signal-top { display: grid; gap: var(--space-xs); }
+.signal-lead { color: var(--color-ink-2); max-width: 44ch; }
+.signal-points { margin: 0; display: grid; gap: var(--space-sm); padding-top: var(--space-md); border-top: var(--rule-hair) solid var(--color-rule); }
+.signal-points div { display: grid; grid-template-columns: 9.5rem minmax(0, 1fr); gap: var(--space-md); align-items: baseline; }
+.signal-points dt { padding-top: 1px; }
+.signal-points dd { margin: 0; font-size: var(--text-sm); color: var(--color-ink-2); line-height: 1.5; }
+.signal-list > .btn { margin-top: auto; align-self: flex-start; }
+@media (max-width: 75rem) and (min-width: 60.01rem) { .signal-points div { grid-template-columns: minmax(0, 1fr); gap: var(--space-3xs); } }
+@media (max-width: 30rem) { .signal-points div { grid-template-columns: minmax(0, 1fr); gap: var(--space-3xs); } }
 .signal-list h3 { font-size: var(--text-xl); }
 .signal-list ul { list-style: none; margin: 0; padding: 0; }
 .signal-list li { display: flex; justify-content: space-between; gap: var(--space-md); align-items: center; padding-block: 10px; border-bottom: var(--rule-hair) solid var(--color-rule); font-size: var(--text-sm); }
-.signal-list .btn { justify-self: start; }
 .deliver { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-md); margin-top: var(--space-xl); }
 .deliver .card { padding: var(--space-lg); display: grid; gap: var(--space-xs); align-content: start; }
 .deliver h3 { font-size: var(--text-lg); } .deliver p { font-size: var(--text-sm); color: var(--color-ink-2); }
@@ -600,4 +610,5 @@ input::placeholder, textarea::placeholder { color: var(--color-muted); opacity: 
 @media (forced-colors: active) { body::after, html::before, .globe-wrap::after { display: none; } .card::before { display: none; } }
 .signal-list .signal-status { margin-top: calc(-1 * var(--space-xs)); }
 .signal-list > p.muted { max-width: 44ch; }
+.signal-top .signal-status { margin: 0 0 var(--space-3xs); }
 .timeline:focus-visible, .table-wrap:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
