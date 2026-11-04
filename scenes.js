@@ -19,6 +19,7 @@
     if (!fig || !list.length) return;
     let last = -1; try { last = +localStorage.getItem('loqsat-person'); } catch (e) { /* storage blocked */ }
     let i = Math.floor(Math.random() * list.length); if (list.length > 1 && i === last) i = (i + 1) % list.length;
+    const ask = +new URLSearchParams(location.search).get('person'); if (ask >= 1 && ask <= list.length) i = ask - 1; // ?person=2 shows one on purpose
     try { localStorage.setItem('loqsat-person', String(i)); } catch (e) { /* storage blocked */ }
     const p = list[i], img = fig.querySelector('img');
     img.addEventListener('load', () => { fig.hidden = false; requestAnimationFrame(() => fig.classList.add('in')); document.querySelector('.hero').classList.add('has-person'); });
