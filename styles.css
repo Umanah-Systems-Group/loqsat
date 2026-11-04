@@ -814,3 +814,13 @@ input::placeholder, textarea::placeholder { color: var(--color-muted); opacity: 
 @media (max-width: 118rem) { .hero-person.in { opacity: 0.28; } }
 @media (max-width: 75rem) { .hero-person { height: 70%; bottom: auto; } .hero-person.in { opacity: 0.2; } }
 .you-label { border-left-color: #FFD673; color: #FFE7A8; }
+
+/* contact: an astronomer of ancient Kush, faded into the dark behind the heading */
+#contact { position: relative; overflow: hidden; isolation: isolate; }
+#contact .container { position: relative; z-index: 1; }
+.section-art { position: absolute; left: 0; top: 0; bottom: 0; height: 100%; aspect-ratio: 1672 / 941; margin: 0; z-index: 0; pointer-events: none; mix-blend-mode: lighten; opacity: 0.3;
+  -webkit-mask-image: linear-gradient(90deg, #000 35%, transparent 60%), linear-gradient(180deg, transparent 0, #000 12%, #000 85%, transparent 100%); -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(90deg, #000 35%, transparent 60%), linear-gradient(180deg, transparent 0, #000 12%, #000 85%, transparent 100%); mask-composite: intersect; }
+.section-art img { width: 100%; height: 100%; object-fit: cover; display: block; filter: grayscale(1) brightness(0.85) contrast(0.9); }
+#contact h2, #contact .muted { text-shadow: 0 2px 24px rgba(2, 4, 10, 0.95); }
+@media (max-width: 60rem) { .section-art { height: 55%; opacity: 0.22; } }
