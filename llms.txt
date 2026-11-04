@@ -1,0 +1,31 @@
+# LoqSat
+
+> LoqSat is a neutral coordination layer for space. When two satellites are predicted to pass dangerously close, LoqSat routes the tracking provider's warning to both operators at the same moment, carries the maneuver they negotiate (offer, counter, accept), and keeps a tamper-evident record of every step that operators, regulators and insurers can check.
+
+What LoqSat does not do:
+- It never commands a spacecraft. The operator who flies it decides.
+- It never computes collision risk itself. Assessment comes from data suppliers.
+- It never spreads a warning beyond the operators it concerns.
+- It never acts without permission. If the permission check does not answer, nothing is sent.
+
+LoqSat was assessed as Awardable on the Department of Defense Chief Digital and Artificial Intelligence Office (CDAO) Tradewinds Solutions Marketplace. Assessment as Awardable does not constitute a government contract, funding commitment, endorsement, sole-source authorization, or guarantee of an award.
+
+LoqSat Earth Signals is a second line of business: weekly measurements from orbit for commodity funds and trading desks. The first signal is the Brazil sugar cane harvest; it is a prototype and validation is in progress.
+
+## Pages
+
+- [Home](https://www.loqsat.com/): what LoqSat is, how one close approach is coordinated end to end, an interactive maneuver planner, and who it serves
+- [For government](https://www.loqsat.com/government.html): the Tradewinds Awardable assessment and how government buyers work with LoqSat
+- [Earth Signals](https://www.loqsat.com/signals.html): the Brazil sugar cane harvest signal and how it is delivered
+
+## Who it serves
+
+- Spacecraft operators, from a single satellite to a full constellation
+- Government and civil agencies
+- Conjunction data suppliers
+- Regulators and insurers
+- Commodity funds and traders (Earth Signals)
+
+## Contact
+
+Use the contact form at https://www.loqsat.com/#contact.
