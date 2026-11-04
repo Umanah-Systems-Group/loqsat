@@ -614,45 +614,35 @@ input::placeholder, textarea::placeholder { color: var(--color-muted); opacity: 
 .timeline:focus-visible, .table-wrap:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
 
 /* ===== Illustrated scenes (scenes.js) ===== */
-/* hero: an astronaut on a tether working on a satellite, drawn in fine line, drifting behind the copy */
+/* hero: Newton's cannonball (after the 1728 Treatise), engraved line work drifting behind the copy */
 .hero-art { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
 .hero-art .haze { position: absolute; border-radius: 50%; filter: blur(60px); opacity: 0.5; }
 .hero-art .haze--a { width: 520px; height: 360px; left: 30%; top: -120px; background: radial-gradient(closest-side, rgba(90, 140, 220, 0.30), transparent); }
 .hero-art .haze--b { width: 420px; height: 420px; left: -140px; bottom: -160px; background: radial-gradient(closest-side, rgba(71, 215, 234, 0.16), transparent); }
-.spacewalk { position: absolute; left: clamp(380px, 38%, 760px); top: clamp(8px, 3vh, 40px); width: clamp(240px, 21vw, 400px); height: auto; overflow: visible; opacity: 0.78; }
-.spacewalk * { vector-effect: non-scaling-stroke; }
-.spacewalk .tether path { fill: none; stroke: rgba(203, 216, 228, 0.45); stroke-width: 1.2; }
-.spacewalk .panel rect { fill: rgba(40, 70, 120, 0.35); stroke: rgba(170, 205, 245, 0.8); stroke-width: 1.1; }
-.spacewalk .panel path, .spacewalk .line { fill: none; stroke: rgba(170, 205, 245, 0.55); stroke-width: 1; }
-.spacewalk .body { fill: #121c2c; stroke: rgba(225, 236, 248, 0.9); stroke-width: 1.2; }
-.spacewalk .dish { fill: none; stroke: rgba(225, 236, 248, 0.9); stroke-width: 1.2; }
-.spacewalk .blink { fill: #FF8A5C; }
-.spacewalk .pack, .spacewalk .torso, .spacewalk .helmet, .spacewalk .boot, .spacewalk .glove { fill: url(#suit); stroke: rgba(235, 243, 250, 0.92); stroke-width: 1.3; }
-.spacewalk .panel-c { fill: #0c1524; stroke: rgba(235, 243, 250, 0.7); stroke-width: 1; }
-.spacewalk .led { fill: #47D7EA; } .spacewalk .led--b { fill: #FFD673; }
-.spacewalk .tube-o { fill: none; stroke: rgba(235, 243, 250, 0.92); stroke-width: 19; stroke-linecap: round; vector-effect: none; }
-.spacewalk .tube-i { fill: none; stroke: #131d2d; stroke-width: 16.4; stroke-linecap: round; vector-effect: none; }
-.spacewalk .visor { stroke: rgba(235, 243, 250, 0.8); stroke-width: 1.1; }
-.spacewalk .glint { fill: none; stroke: rgba(255, 255, 255, 0.85); stroke-width: 2; stroke-linecap: round; }
-.spacewalk .specks circle { fill: #dfeaf6; }
-.spacewalk .astro-float, .spacewalk .sat-float, .spacewalk .reach { transform-box: view-box; }
+.principia { position: absolute; left: clamp(-40px, 6vw, 220px); top: 52%; translate: 0 -50%; width: clamp(560px, 46vw, 900px); height: auto; overflow: visible; opacity: 0.34;
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 70%, transparent 100%); mask-image: radial-gradient(circle at 50% 50%, #000 70%, transparent 100%); }
+.principia * { vector-effect: non-scaling-stroke; }
+.principia .engr-hatch path { fill: none; stroke: #cfd9e4; stroke-width: 0.6; opacity: 0.55; }
+.principia .engr-earth circle, .principia .engr-earth ellipse { fill: none; stroke: #e6edf4; stroke-width: 1.1; }
+.principia .engr-earth ellipse { stroke-width: 0.6; opacity: 0.6; }
+.principia .engr-mount, .principia .engr-cannon { fill: #0a1120; stroke: #e6edf4; stroke-width: 1.1; stroke-linejoin: round; }
+.principia .engr-shots path, .principia .engr-orbit { fill: none; stroke: #e6edf4; stroke-width: 1; stroke-dasharray: 0.012 0.008; }
+.principia .engr-orbit { stroke: #8EE8F3; stroke-width: 1.3; stroke-dasharray: none; }
+.principia .engr-ball { fill: #8EE8F3; }
+.principia .engr-labels text { fill: #e6edf4; font: italic 15px Georgia, "Times New Roman", serif; }
+.principia .engr-caption { fill: #cfd9e4; font: italic 13px Georgia, "Times New Roman", serif; opacity: 0.8; }
 @media (prefers-reduced-motion: no-preference) {
-  .spacewalk .astro-float { animation: sw-float 11s ease-in-out infinite; transform-origin: 150px 180px; }
-  .spacewalk .sat-float { animation: sw-sat 15s ease-in-out infinite; transform-origin: 332px 96px; }
-  .spacewalk .reach { animation: sw-reach 5.5s ease-in-out infinite; transform-origin: 170px 165px; }
-  .spacewalk .blink { animation: sw-blink 2.4s steps(1) infinite; }
-  .spacewalk .specks circle { animation: sw-twinkle 3.6s ease-in-out infinite; }
-  .spacewalk .specks circle:nth-child(2n) { animation-delay: -1.7s; }
+  .principia { animation: pr-drift 26s ease-in-out infinite alternate; }
+  .principia .engr-shots path { stroke-dasharray: 1; stroke-dashoffset: 1; animation: pr-draw 1.4s ease-out forwards; animation-delay: calc(0.6s + var(--i) * 1.1s); }
+  .principia .engr-orbit { stroke-dasharray: 1; stroke-dashoffset: 1; animation: pr-draw 2.4s ease-in-out 5.2s forwards; }
+  .principia .engr-ball { opacity: 0; animation: pr-show 0.6s ease 6s forwards; }
   .hero-art .haze--a { animation: sw-haze 22s ease-in-out infinite alternate; }
 }
-@keyframes sw-float { 0%, 100% { transform: translate(0, 0) rotate(0deg); } 50% { transform: translate(-6px, 12px) rotate(-3deg); } }
-@keyframes sw-sat { 0%, 100% { transform: translate(0, 0) rotate(0deg); } 50% { transform: translate(4px, -6px) rotate(4deg); } }
-@keyframes sw-reach { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-5deg); } }
-@keyframes sw-blink { 0%, 60% { opacity: 1; } 61%, 100% { opacity: 0.15; } }
-@keyframes sw-twinkle { 0%, 100% { opacity: 0.25; } 50% { opacity: 1; } }
+@keyframes pr-draw { to { stroke-dashoffset: 0; } }
+@keyframes pr-show { to { opacity: 1; } }
+@keyframes pr-drift { from { transform: translate(0, 0) rotate(0deg); } to { transform: translate(18px, -10px) rotate(-2deg); } }
 @keyframes sw-haze { from { transform: translate(0, 0) scale(1); } to { transform: translate(-60px, 30px) scale(1.15); } }
-@media (max-width: 75rem) { .spacewalk { left: auto; right: 4%; top: 12px; width: clamp(150px, 26vw, 260px); opacity: 0.55; } }
-@media (max-width: 40rem) { .spacewalk { width: 132px; right: -8px; top: 4px; opacity: 0.45; } }
+@media (max-width: 60rem) { .principia { width: 130vw; left: -15vw; top: 40%; opacity: 0.2; } }
 
 /* Awardable: gold dust, a turning ring round the badge, three plain facts */
 .awardable .gold-dust { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
