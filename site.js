@@ -6,7 +6,8 @@
   document.querySelectorAll('[data-stagger]').forEach((g) => Array.from(g.children).forEach((c, i) => c.style.setProperty('--d', Math.min(i, 9) * 80 + 'ms')));
   const countUp = (root) => root.querySelectorAll('.big').forEach((el) => {
     const node = el.firstChild; if (!node || node.nodeType !== 3) return;
-    const target = parseInt(node.textContent.replace(/,/g, ''), 10); if (!target || reduce) return;
+    const raw = node.textContent.replace(/,/g, '').trim(); if (!/^\d+$/.test(raw)) return; // 1.2 (M) stays as written
+    const target = parseInt(raw, 10); if (!target || reduce) return;
     const t0 = performance.now(), dur = 1400;
     const step = (t) => { const k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 3);
       node.textContent = Math.round(target * e).toLocaleString('en-US'); if (k < 1) requestAnimationFrame(step); };

@@ -3,15 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#02040a">
 <meta name="description" content="LoqSat is a neutral coordination layer for space: collision warnings routed, maneuvers agreed, every step on the record. Plus LoqSat Earth Signals, weekly measurements of the Earth from orbit.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono:wght@400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400..700&family=Geist+Mono:wght@400;500&display=swap">
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="styles.css">
-
 <title>LoqSat | The Coordination Layer for Space</title>
 </head>
 <body>
+
 <a class="skip" href="#main">Skip to content</a>
 <header class="nav">
   <div class="container">
@@ -33,7 +34,6 @@
   <section class="hero" aria-labelledby="hero-h">
     <div class="container hero-grid">
       <div class="hero-copy">
-        <p class="kicker"><img src="badge-tradewinds-awardable.png" width="28" height="28" alt=""> <span>Assessed as Awardable by the Department of Defense’s CDAO on the Tradewinds Solutions Marketplace</span></p>
         <h1 id="hero-h">Coordination is the <em>missing layer</em> in orbit.</h1>
         <p class="lead">LoqSat is a neutral layer that routes collision warnings between satellite operators, carries the maneuver they agree on, and keeps a record nobody can quietly change.</p>
         <div class="actions">
@@ -58,17 +58,31 @@
           <div><span class="label">Speed</span><span class="measure" id="globe-speed">60× real time</span></div>
         </div>
         <div class="chips" role="group" aria-label="Satellite groups">
-          <button class="chip" type="button" data-group="starlink" aria-pressed="true" style="--dot: #2f6fd6">Starlink <span class="measure"></span></button>
-          <button class="chip" type="button" data-group="oneweb" aria-pressed="true" style="--dot: #7a4fd0">OneWeb <span class="measure"></span></button>
-          <button class="chip" type="button" data-group="nav" aria-pressed="true" style="--dot: #1f9e6e">Navigation <span class="measure"></span></button>
-          <button class="chip" type="button" data-group="stations" aria-pressed="true" style="--dot: #e2672b">Stations <span class="measure"></span></button>
-          <button class="chip" type="button" data-group="other" aria-pressed="true" style="--dot: #334a6b">Everything else <span class="measure"></span></button>
+          <button class="chip" type="button" data-group="starlink" aria-pressed="true" style="--dot: #8FE8FF">Starlink <span class="measure"></span></button>
+          <button class="chip" type="button" data-group="oneweb" aria-pressed="true" style="--dot: #BAA3FF">OneWeb <span class="measure"></span></button>
+          <button class="chip" type="button" data-group="nav" aria-pressed="true" style="--dot: #FFD673">Navigation <span class="measure"></span></button>
+          <button class="chip" type="button" data-group="stations" aria-pressed="true" style="--dot: #FF7A66">Stations <span class="measure"></span></button>
+          <button class="chip" type="button" data-group="other" aria-pressed="true" style="--dot: #7FA0FF">Everything else <span class="measure"></span></button>
           <span class="chip-sep" aria-hidden="true"></span>
           <button class="chip chip--plain" type="button" data-far aria-pressed="false">Out to GEO</button>
           <button class="chip chip--plain" type="button" data-speed aria-pressed="false">Real time</button>
         </div>
         <p class="bar-note">CelesTrak public catalogue, 2 Nov 2026 04:06 UTC. Positions for orientation, not for screening.</p>
       </div>
+    </div>
+  </section>
+
+  <!-- AWARDABLE BAND -->
+  <section class="awardable" aria-labelledby="awardable-h">
+    <div class="container awardable-inner">
+      <p class="awardable-kicker" data-reveal>Defense innovation marketplace</p>
+      <h2 class="awardable-h" id="awardable-h" data-reveal>Assessed as Awardable.</h2>
+      <p class="awardable-lead" data-reveal="2">LoqSat was assessed as Awardable on the CDAO Tradewinds Solutions Marketplace.</p>
+      <a class="awardable-badge" href="https://www.tradewindai.com" target="_blank" rel="noopener" data-reveal="2">
+        <span class="badge-tile"><img src="badge-tradewinds-awardable.png" width="196" height="196" alt="Awardable badge, CDAO Tradewinds Solutions Marketplace"></span>
+        <span class="awardable-name">CDAO Tradewinds Solutions Marketplace</span>
+      </a>
+      <p class="awardable-fine" data-reveal="3">Assessment as Awardable does not constitute a government contract, funding commitment, endorsement, sole-source authorization, or guarantee of an award.</p>
     </div>
   </section>
 
@@ -112,7 +126,7 @@
               <button class="btn btn--sm" type="button" data-tamper>Change entry 02</button>
             </div>
           </div>
-          <div class="table-wrap">
+          <div class="table-wrap" tabindex="0" role="region" aria-label="Coordination record entries">
             <table>
               <thead><tr><th>#</th><th>Time</th><th>Who</th><th>Event</th><th>Seal</th></tr></thead>
               <tbody id="record-list"></tbody>
@@ -131,7 +145,7 @@
         <h2 id="time-h">Two days, one decision.</h2>
         <p>From the first warning to the closest approach, both operators work from the same page and the same clock.</p>
       </div>
-      <figure class="timeline" data-reveal="3">
+      <figure class="timeline" data-reveal="3" tabindex="0" aria-label="Timeline of one coordination event">
         <svg viewBox="0 0 960 150" role="img" aria-label="One coordination event on a UTC axis: screening request, conjunction message, advisory, offer, agreement, then closest approach.">
           <line x1="20" y1="90" x2="940" y2="90" stroke="var(--color-rule)" />
           <g fill="var(--color-muted)" font-family="var(--font-outlier)" font-size="12">
@@ -259,7 +273,7 @@
         <article class="card"><span class="measure n">02</span><h3>Government and civil agencies</h3><p>Available through established government procurement vehicles.</p></article>
         <article class="card"><span class="measure n">03</span><h3>Data suppliers</h3><p>Plug in as a verified conjunction assessment provider. No operator disruption on substitution.</p></article>
         <article class="card"><span class="measure n">04</span><h3>Regulators and insurers</h3><p>Auditable coordination logs for compliance and liability as space traffic rules mature.</p></article>
-        <article class="card"><span class="measure n">05</span><h3>Commodity funds and traders</h3><p>LoqSat Earth Signals: weekly measurements of crops, rivers and mines from free satellite imagery.</p></article>
+        <article class="card"><span class="measure n">05</span><h3>Commodity funds and traders</h3><p>LoqSat Earth Signals: weekly measurements of the Brazil sugar cane harvest from free satellite imagery.</p></article>
       </div>
     </div>
   </section>
@@ -284,7 +298,7 @@
     <div class="container">
       <div class="section-head" data-reveal>
         <h2 id="signals-h">LoqSat Earth Signals. What orbit sees before the market does.</h2>
-        <p>The same orbit, pointed at the ground. We measure harvests, rivers and mines from free satellite imagery every week, with history back to 2015.</p>
+        <p>The same orbit, pointed at the ground. We measure the Brazil sugar cane harvest from free satellite imagery every week, with history back to 2015.</p>
       </div>
       <div class="signals-grid">
         <figure class="photo" data-reveal data-parallax>
@@ -296,19 +310,9 @@
           </figcaption>
         </figure>
         <div class="signal-list" data-reveal="2">
-          <h3>The lineup</h3>
-          <ul data-stagger>
-            <li><span>Brazil sugar cane harvest</span><span class="status now">First signal</span></li>
-            <li><span>Orange juice, Brazil groves</span><span class="status later">Planned</span></li>
-            <li><span>Coffee</span><span class="status later">Planned</span></li>
-            <li><span>Cocoa, West Africa</span><span class="status later">Planned</span></li>
-            <li><span>Rice, South and Southeast Asia</span><span class="status later">Planned</span></li>
-            <li><span>China hydropower, Yunnan and Sichuan</span><span class="status later">Planned</span></li>
-            <li><span>Paraná and Paraguay river shipping</span><span class="status later">Planned</span></li>
-            <li><span>Lithium brine ponds</span><span class="status later">Planned</span></li>
-            <li><span>Rare earth mine activity</span><span class="status later">Planned</span></li>
-            <li><span>Flood and wildfire footprints</span><span class="status later">Planned</span></li>
-          </ul>
+          <h3>Brazil sugar cane harvest</h3>
+          <p class="signal-status"><span class="status now">First signal</span></p>
+          <p class="muted">Share of standing cane cut so far, one Sentinel-2 tile east of Ribeirão Preto, 2024 season.</p>
           <a class="btn" href="signals.html">See the sugar cane signal</a>
         </div>
       </div>

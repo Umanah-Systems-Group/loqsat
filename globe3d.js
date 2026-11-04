@@ -1,5 +1,9 @@
 /* LoqSat orbit view: a WebGL Earth lit by the real sun, every satellite in the CelesTrak active catalogue, and one
    sample conjunction and its coordination record.
+   The look follows the app sign-in (deploy/public-demo/public/auth/assets/space.js): the same Earth, cloud and
+   atmosphere shaders, the same starfield, the same satellite colours, and a few named satellites with orbit trails.
+   On wide screens the canvas fills the hero and the Earth sits to the right of the copy; on narrow screens it is a
+   square below the copy.
    Textures: public-domain Earth mosaics, via three-globe (MIT). */
 (() => {
   const canvas = document.getElementById('globe');
@@ -8,14 +12,15 @@
   const T = THREE, reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (T.ColorManagement) T.ColorManagement.enabled = false;
   let renderer;
-  try { renderer = new T.WebGLRenderer({ canvas, antialias: true, alpha: true }); }
+  try { renderer = new T.WebGLRenderer({ canvas, antialias: true, alpha: false }); }
   catch (e) { wrap.classList.add('no-gl'); return; }
   if ('outputColorSpace' in renderer) renderer.outputColorSpace = T.LinearSRGBColorSpace || 'srgb-linear';
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-  renderer.setClearColor(0x000000, 0);
+  const DPR = Math.min(window.devicePixelRatio || 1, 2);
+  renderer.setPixelRatio(DPR);
+  renderer.setClearColor(0x02040a, 1);
 
   const scene = new T.Scene();
-  const camera = new T.PerspectiveCamera(30, 1, 0.05, 200);
+  const camera = new T.PerspectiveCamera(30, 1, 0.05, 400);
   const rad = Math.PI / 180, R_E = 6371, MU = 398600.4418, K = reduce ? 1 : 60;
 
   // ---- sun and earth rotation from the clock ----
@@ -28,11 +33,36 @@
     return { sun: new T.Vector3(Math.cos(dec) * Math.cos(ra), Math.sin(dec), -Math.cos(dec) * Math.sin(ra)), gmst, ra };
   }
 
-  // ---- earth ----
+  // ---- stars: fixed in the inertial frame, with a denser band for the Milky Way (as on the sign-in) ----
+  (function stars() {
+    const n = 2600, pos = new Float32Array(n * 3), size = new Float32Array(n), col = new Float32Array(n * 3);
+    let seed = 7; const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+    const band = new T.Vector3(0.35, 0.86, 0.37).normalize(), v = new T.Vector3();
+    for (let i = 0; i < n; i++) {
+      const u = rnd() * 2 - 1, th = rnd() * Math.PI * 2, sq = Math.sqrt(1 - u * u);
+      v.set(sq * Math.cos(th), u, sq * Math.sin(th));
+      if (i % 5 < 2) { const off = v.dot(band); v.addScaledVector(band, -off * (1 - Math.abs((rnd() - 0.5) * 0.5))).normalize(); }
+      pos.set([v.x * 160, v.y * 160, v.z * 160], i * 3);
+      const b = Math.pow(rnd(), 3.2), warm = rnd();
+      size[i] = 0.7 + b * 2.2;
+      col.set([(0.55 + 0.45 * b) * (warm > 0.8 ? 1.0 : 0.85), (0.6 + 0.4 * b) * 0.92, (0.7 + 0.3 * b) * (warm > 0.8 ? 0.8 : 1.0)], i * 3);
+    }
+    const g = new T.BufferGeometry();
+    g.setAttribute('position', new T.BufferAttribute(pos, 3)); g.setAttribute('size', new T.BufferAttribute(size, 1)); g.setAttribute('color', new T.BufferAttribute(col, 3));
+    const p = new T.Points(g, new T.ShaderMaterial({
+      uniforms: { dpr: { value: DPR } }, transparent: true, depthWrite: false, blending: T.AdditiveBlending,
+      vertexShader: 'attribute float size; attribute vec3 color; uniform float dpr; varying vec3 vC; void main(){ vC=color; gl_PointSize=size*dpr; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }',
+      fragmentShader: 'varying vec3 vC; void main(){ vec2 q=gl_PointCoord*2.0-1.0; float r=dot(q,q); if(r>1.0) discard; gl_FragColor=vec4(vC*exp(-r*4.0)*0.9,1.0); }'
+    }));
+    p.frustumCulled = false; scene.add(p);
+  })();
+
+  // ---- earth, clouds, atmosphere: city lights at night, a warm band on the terminator, a faint night graticule ----
   const loader = new T.TextureLoader();
-  const tex = (f) => { const t = loader.load(f); t.anisotropy = 8; return t; };
+  const tex = (f) => { const t = loader.load(f); t.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy()); return t; };
+  const big = Math.max(screen.width || 0, screen.height || 0) * DPR > 1800;
   const earthMat = new T.ShaderMaterial({
-    uniforms: { day: { value: tex('earth-day.jpg') }, night: { value: tex('earth-night.jpg') }, water: { value: tex('earth-water.jpg') }, sun: { value: new T.Vector3(1, 0, 0) } },
+    uniforms: { day: { value: tex(big ? 'earth-day.jpg' : 'earth-day-2k.jpg') }, night: { value: tex('earth-night.jpg') }, water: { value: tex('earth-water.jpg') }, sun: { value: new T.Vector3(1, 0, 0) } },
     vertexShader: `varying vec2 vUv; varying vec3 vN; varying vec3 vW;
       void main(){ vUv=uv; vN=normalize(mat3(modelMatrix)*normal); vec4 w=modelMatrix*vec4(position,1.0); vW=w.xyz; gl_Position=projectionMatrix*viewMatrix*w; }`,
     fragmentShader: `uniform sampler2D day; uniform sampler2D night; uniform sampler2D water; uniform vec3 sun;
@@ -40,56 +70,63 @@
       void main(){
         vec3 n=normalize(vN); vec3 v=normalize(cameraPosition-vW); float d=dot(n,sun);
         vec3 dc=texture2D(day,vUv).rgb; vec3 nc=texture2D(night,vUv).rgb; float w=texture2D(water,vUv).r;
-        float lit=smoothstep(-0.10,0.22,d);
-        vec3 dayCol=dc*(0.30+0.92*clamp(d+0.18,0.0,1.0));
-        vec3 h=normalize(sun+v); float spec=pow(max(dot(n,h),0.0),48.0)*w*0.55*lit;
-        vec3 nightCol=nc*vec3(1.0,0.82,0.55)*1.6+dc*0.05;
-        vec3 col=mix(nightCol,dayCol,lit)+spec*vec3(1.0,0.96,0.88);
-        float fr=pow(1.0-max(dot(n,v),0.0),2.6);
-        col=mix(col,vec3(0.56,0.76,1.0),fr*0.65*(0.25+0.75*lit));
+        float lit=smoothstep(-0.08,0.20,d); float fr=pow(1.0-max(dot(n,v),0.0),2.4);
+        vec3 dayCol=dc*(0.18+1.0*clamp(d+0.12,0.0,1.0));
+        vec3 h=normalize(sun+v); float spec=pow(max(dot(n,h),0.0),110.0)*w*0.26*smoothstep(0.15,0.5,d);
+        float city=smoothstep(0.16,0.55,nc.r); vec3 nightCol=nc*city*vec3(2.2,1.75,1.1)+dc*vec3(0.035,0.05,0.095);
+        vec3 col=mix(nightCol,dayCol,lit)+spec*vec3(1.0,0.93,0.82);
+        col+=vec3(1.0,0.45,0.2)*exp(-pow((d-0.02)/0.05,2.0))*0.035*(1.0-fr);
+        col=mix(col,vec3(0.40,0.66,1.0),fr*0.75*(0.12+0.88*smoothstep(-0.25,0.35,d)));
+        vec2 gq=abs(fract(vec2(vUv.x*24.0,vUv.y*12.0)+0.5)-0.5)/fwidth(vec2(vUv.x*24.0,vUv.y*12.0));
+        float grid=1.0-min(min(gq.x,gq.y),1.0);
+        col+=vec3(0.30,0.75,0.95)*grid*0.07*(1.0-lit)*(1.0-fr);
         gl_FragColor=vec4(col,1.0);
       }`
   });
+  earthMat.extensions = { derivatives: true };
   const earth = new T.Mesh(new T.SphereGeometry(1, 160, 80), earthMat);
   scene.add(earth);
-  const clouds = new T.Mesh(new T.SphereGeometry(1.008, 96, 48), new T.ShaderMaterial({
+  const clouds = new T.Mesh(new T.SphereGeometry(1.006, 128, 64), new T.ShaderMaterial({
     uniforms: { map: { value: tex('earth-clouds.jpg') }, sun: earthMat.uniforms.sun }, transparent: true, depthWrite: false,
     vertexShader: `varying vec2 vUv; varying vec3 vN; void main(){ vUv=uv; vN=normalize(mat3(modelMatrix)*normal); gl_Position=projectionMatrix*viewMatrix*modelMatrix*vec4(position,1.0); }`,
     fragmentShader: `uniform sampler2D map; uniform vec3 sun; varying vec2 vUv; varying vec3 vN;
-      void main(){ float c=texture2D(map,vUv).r; float d=dot(normalize(vN),sun); float lit=smoothstep(-0.1,0.3,d); gl_FragColor=vec4(vec3(1.0)*(0.25+0.75*lit), c*0.8*(0.15+0.85*lit)); }`
+      void main(){ float c=texture2D(map,vUv).r; float d=dot(normalize(vN),sun); float lit=smoothstep(-0.1,0.3,d); gl_FragColor=vec4(vec3(1.0,0.99,0.97)*(0.1+0.9*lit), c*0.82*(0.06+0.94*lit)); }`
   }));
   scene.add(clouds);
-
-  // atmosphere: glow measured by how far the view ray passes from the limb
-  const atmoMat = new T.ShaderMaterial({
-    uniforms: { sun: earthMat.uniforms.sun },
-    transparent: true, depthWrite: false,
+  // atmosphere: glow measured by how far the view ray passes from the limb, blue by day, deep blue at night
+  scene.add(new T.Mesh(new T.SphereGeometry(1.16, 96, 48), new T.ShaderMaterial({
+    uniforms: { sun: earthMat.uniforms.sun }, transparent: true, depthWrite: false, blending: T.AdditiveBlending,
     vertexShader: `varying vec3 vW; void main(){ vec4 w=modelMatrix*vec4(position,1.0); vW=w.xyz; gl_Position=projectionMatrix*viewMatrix*w; }`,
     fragmentShader: `uniform vec3 sun; varying vec3 vW;
-      void main(){
-        vec3 dir=normalize(vW-cameraPosition); vec3 c=cameraPosition-dot(cameraPosition,dir)*dir; float b=length(c);
-        float g = b>1.0 ? pow(clamp(1.0-(b-1.0)/0.16,0.0,1.0),2.6) : pow(b,10.0)*0.55;
-        float day=clamp(dot(normalize(c),sun)*0.8+0.55,0.15,1.0);
-        gl_FragColor=vec4(vec3(0.42,0.66,1.0),g*0.9*day);
-      }`
-  });
-  scene.add(new T.Mesh(new T.SphereGeometry(1.16, 96, 48), atmoMat));
+      void main(){ vec3 dir=normalize(vW-cameraPosition); vec3 c=cameraPosition-dot(cameraPosition,dir)*dir; float b=length(c);
+        if(b<1.0) discard;
+        float g=pow(clamp(1.0-(b-1.0)/0.16,0.0,1.0),3.2);
+        float s=dot(normalize(c),sun); float day=smoothstep(-0.45,0.6,s);
+        vec3 tint=mix(vec3(0.16,0.30,0.75),vec3(0.42,0.70,1.0),day)+vec3(0.9,0.45,0.2)*exp(-pow(s/0.22,2.0))*0.35;
+        gl_FragColor=vec4(tint*g*(0.18+0.95*day),1.0); }`
+  })));
 
   // ---- satellites: the public active catalogue ----
-  const pointMat = (size) => new T.ShaderMaterial({
+  // glow: the sign-in's additive dot (a bright core and a soft halo); otherwise a solid dot with a white rim
+  const pointMat = (size, glow) => new T.ShaderMaterial({
     uniforms: { size: { value: size * renderer.getPixelRatio() }, maxR: { value: 100 }, dim: { value: 1 }, minS: { value: 0.55 } }, transparent: true, depthWrite: false,
+    blending: glow ? T.AdditiveBlending : T.NormalBlending,
     vertexShader: `attribute vec3 color; attribute float scale; varying vec3 vC; uniform float size; uniform float maxR; uniform float minS;
       void main(){ vC=color; vec4 mv=modelViewMatrix*vec4(position,1.0); float s = scale > 0.0 ? scale : 1.0;
         gl_PointSize = (scale < 0.0 || length(position) > maxR) ? 0.0 : size*s*clamp(3.2/-mv.z,minS,1.6); gl_Position=projectionMatrix*mv; }`,
-    fragmentShader: `varying vec3 vC; uniform float dim; void main(){ vec2 p=gl_PointCoord-0.5; float r=length(p); if(r>0.5) discard;
-      vec3 col = r<0.30 ? vC : vec3(0.98,0.99,1.0); float a = r<0.40 ? 1.0 : (1.0-(r-0.40)/0.10)*0.85; gl_FragColor=vec4(col,a*dim); }`
+    fragmentShader: glow
+      ? `varying vec3 vC; uniform float dim; void main(){ vec2 q=gl_PointCoord*2.0-1.0; float r=dot(q,q); if(r>1.0) discard;
+          float core=exp(-r*9.0); float halo=exp(-r*2.6)*0.28; gl_FragColor=vec4((vC*(core+halo)+vec3(core*0.45))*dim,1.0); }`
+      : `varying vec3 vC; uniform float dim; void main(){ vec2 p=gl_PointCoord-0.5; float r=length(p); if(r>0.5) discard;
+          vec3 col = r<0.30 ? vC : vec3(0.98,0.99,1.0); float a = r<0.40 ? 1.0 : (1.0-(r-0.40)/0.10)*0.85; gl_FragColor=vec4(col,a*dim); }`
   });
   const GROUPS = [
-    { key: 'starlink', re: /^STARLINK/, color: 0x2f6fd6, scale: 1 },
-    { key: 'oneweb', re: /^ONEWEB/, color: 0x7a4fd0, scale: 1 },
-    { key: 'nav', re: /NAVSTAR|GPS |GLONASS|GALILEO|GSAT0|BEIDOU|IRNSS|QZS/, color: 0x1f9e6e, scale: 1.5 },
-    { key: 'stations', re: /^(ISS \(|CSS \(|TIANGONG)/, color: 0xe2672b, scale: 2.2 },
-    { key: 'other', re: /./, color: 0x334a6b, scale: 1 }
+    // the sign-in's colours; alpha dims the crowded groups so the Earth stays readable through them
+    { key: 'starlink', re: /^STARLINK/, color: 0x8FE8FF, alpha: 0.85, scale: 1 },
+    { key: 'oneweb', re: /^ONEWEB/, color: 0xBAA3FF, alpha: 0.9, scale: 1.1 },
+    { key: 'nav', re: /NAVSTAR|GPS |GLONASS|GALILEO|GSAT0|BEIDOU|IRNSS|QZS/, color: 0xFFD673, alpha: 1, scale: 1.6 },
+    { key: 'stations', re: /^(ISS \(|CSS \(|TIANGONG)/, color: 0xFF7A66, alpha: 1, scale: 2.4 },
+    { key: 'other', re: /./, color: 0x7FA0FF, alpha: 0.7, scale: 1 }
   ];
   const sat = window.satellite, cat = window.LOQSAT_CATALOGUE;
   const rows = (sat && cat && cat.rows) || [];
@@ -101,11 +138,11 @@
     try { recs[i] = sat.twoline2satrec(l1, l2); } catch (e) { recs[i] = null; }
     const g = GROUPS.findIndex((x) => x.re.test(name)); grp[i] = g; groupCount[g]++;
     meta[i] = { name, norad: l1.slice(2, 7).trim() };
-    const c = new T.Color(GROUPS[g].color); satCol.set([c.r, c.g, c.b], i * 3); satScale[i] = GROUPS[g].scale;
+    const c = new T.Color(GROUPS[g].color), al = GROUPS[g].alpha; satCol.set([c.r * al, c.g * al, c.b * al], i * 3); satScale[i] = GROUPS[g].scale;
   });
   const satGeo = new T.BufferGeometry();
   satGeo.setAttribute('position', new T.BufferAttribute(satPos, 3)); satGeo.setAttribute('color', new T.BufferAttribute(satCol, 3)); satGeo.setAttribute('scale', new T.BufferAttribute(satScale, 1));
-  const satMat = pointMat(4.4), satPts = new T.Points(satGeo, satMat); satPts.frustumCulled = false; scene.add(satPts);
+  const satMat = pointMat(6.5, true), satPts = new T.Points(satGeo, satMat); satPts.frustumCulled = false; scene.add(satPts);
   function prop(i, ms) {
     const r = recs[i]; at[i] = ms; if (!r) { eci[i * 3] = NaN; return; }
     let pv; try { pv = sat.propagate(r, new Date(ms)); } catch (e) { pv = null; }
@@ -132,21 +169,48 @@
     satGeo.attributes.position.needsUpdate = true; satGeo.attributes.scale.needsUpdate = true;
   }
 
+  // ---- a few named satellites with orbit trails and labels, as on the sign-in ----
+  // One orbit of points, propagated once in the inertial frame; a bright head runs round it with the satellite.
+  const TRAILED = [[/^ISS \(ZARYA\)$/, 'ISS'], [/^CSS \(TIANHE\)$/, 'TIANGONG'], [/^HST$/, 'HUBBLE'], [/^ONEWEB-0360$/, 'ONEWEB-0360']];
+  const trails = [], labelHost = wrap;
+  const trailMat = (hex) => { const c = new T.Color(hex); return new T.ShaderMaterial({
+    uniforms: { head: { value: 0 }, px: { value: 1000 }, fade: { value: 1 }, col: { value: new T.Vector3(c.r, c.g, c.b) } },
+    transparent: true, depthWrite: false, blending: T.AdditiveBlending,
+    vertexShader: `attribute float ph; uniform float head; uniform float px; uniform float fade; varying float vA;
+      void main(){ vec4 mv=modelViewMatrix*vec4(position,1.0); gl_Position=projectionMatrix*mv;
+        float d=fract(head-ph+1.0); float k=d<0.30 ? pow(1.0-d/0.30,2.2) : 0.0;
+        vA=fade*(0.10+0.90*k); gl_PointSize=clamp((0.006+0.016*pow(k,8.0))*px/-mv.z,1.5,9.0); }`,
+    fragmentShader: `uniform vec3 col; varying float vA; void main(){ vec2 q=gl_PointCoord*2.0-1.0; float r=dot(q,q); if(r>1.0) discard; gl_FragColor=vec4((col+vec3(0.25))*exp(-r*3.0)*vA,1.0); }`
+  }); };
+  if (sat) TRAILED.forEach(([re, label]) => {
+    const i = meta.findIndex((m) => m && re.test(m.name)); if (i < 0 || !recs[i]) return;
+    const period = 2 * Math.PI / recs[i].no * 60000, t0 = Date.now(), n = 900, pos = new Float32Array(n * 3), ph = new Float32Array(n);
+    for (let k = 0; k < n; k++) {
+      let pv; try { pv = sat.propagate(recs[i], new Date(t0 + period * k / (n - 1))); } catch (e) { pv = null; }
+      if (!pv || !pv.position || isNaN(pv.position.x)) return;
+      pos.set([pv.position.x / R_E, pv.position.z / R_E, -pv.position.y / R_E], k * 3); ph[k] = k / (n - 1);
+    }
+    const g = new T.BufferGeometry(); g.setAttribute('position', new T.BufferAttribute(pos, 3)); g.setAttribute('ph', new T.BufferAttribute(ph, 1));
+    const mat = trailMat(GROUPS[grp[i]].color), pts = new T.Points(g, mat); pts.frustumCulled = false; scene.add(pts);
+    const el = document.createElement('div'); el.className = 'sat-label'; el.setAttribute('aria-hidden', 'true'); el.textContent = label; labelHost.appendChild(el);
+    trails.push({ i, t0, period, pos, n, mat, pts, el });
+  });
+
   // ---- the sample conjunction ----
   const conj = { active: false, P: new T.Vector3(), aim: new T.Vector3(0, 0, 1), a: null, b: null, tca: 0, phase: 0, raise: 0 };
   const lineMat = (hex, op) => new T.LineBasicMaterial({ color: hex, transparent: true, opacity: op, depthWrite: false });
   const ringGeo = (u, v, r) => { const p = []; for (let i = 0; i <= 256; i++) { const t = i / 256 * 2 * Math.PI; p.push(u.clone().multiplyScalar(Math.cos(t) * r).add(v.clone().multiplyScalar(Math.sin(t) * r))); } return new T.BufferGeometry().setFromPoints(p); };
-  const ringA = new T.Line(new T.BufferGeometry(), lineMat(0xe2672b, 0.95)), ringB = new T.Line(new T.BufferGeometry(), lineMat(0x2f6fd6, 0.95));
-  const ringA0 = new T.Line(new T.BufferGeometry(), new T.LineDashedMaterial({ color: 0xe2672b, dashSize: 0.02, gapSize: 0.02, transparent: true, opacity: 0.6 }));
+  const ringA = new T.Line(new T.BufferGeometry(), lineMat(0xFF8A5C, 0.95)), ringB = new T.Line(new T.BufferGeometry(), lineMat(0x47D7EA, 0.95));
+  const ringA0 = new T.Line(new T.BufferGeometry(), new T.LineDashedMaterial({ color: 0xFF8A5C, dashSize: 0.02, gapSize: 0.02, transparent: true, opacity: 0.6 }));
   [ringA, ringB, ringA0].forEach((l) => { l.visible = false; scene.add(l); });
   const pairGeo = new T.BufferGeometry(); pairGeo.setAttribute('position', new T.BufferAttribute(new Float32Array(6), 3));
-  pairGeo.setAttribute('color', new T.BufferAttribute(new Float32Array([0.886, 0.404, 0.169, 0.184, 0.435, 0.839]), 3));
+  pairGeo.setAttribute('color', new T.BufferAttribute(new Float32Array([1.0, 0.541, 0.361, 0.278, 0.843, 0.918]), 3));
   const pair = new T.Points(pairGeo, pointMat(13)); pair.visible = false; pair.frustumCulled = false; pair.renderOrder = 3; scene.add(pair);
-  const marker = new T.Mesh(new T.RingGeometry(0.018, 0.024, 48), new T.MeshBasicMaterial({ color: 0xe2672b, transparent: true, side: T.DoubleSide, depthWrite: false }));
+  const marker = new T.Mesh(new T.RingGeometry(0.018, 0.024, 48), new T.MeshBasicMaterial({ color: 0xFF8A5C, transparent: true, side: T.DoubleSide, depthWrite: false }));
   marker.visible = false; scene.add(marker);
 
   // ---- camera: follows the sun so the lit side faces the viewer; drag to turn ----
-  const view = { yaw: -0.98, pitch: 0.24, dist: 5.4, tYaw: -0.98, tPitch: 0.24, tDist: 5.4, focus: null, focusK: 0 };
+  const view = { yaw: -1.2, pitch: 0.3, dist: 5.4, tYaw: -1.2, tPitch: 0.3, tDist: 5.4, focus: null, focusK: 0 };
   // with nobody touching it, the view turns slowly round the polar axis (west to east), which shows the Earth
   // turning with its satellites and its real lighting together; it waits a moment after a drag or key press
   const SPIN = 0.05, SPIN_WAIT = 2.5;
@@ -156,8 +220,34 @@
   const endDrag = () => { dragging = null; idle = 0; }; canvas.addEventListener('pointerup', endDrag); canvas.addEventListener('pointercancel', endDrag);
   canvas.addEventListener('keydown', (e) => { const k = { ArrowLeft: [0.15, 0], ArrowRight: [-0.15, 0], ArrowUp: [0, -0.12], ArrowDown: [0, 0.12] }[e.key]; if (!k) return; e.preventDefault(); view.tYaw += k[0]; view.tPitch = Math.max(-1.2, Math.min(1.2, view.tPitch + k[1])); idle = 0; });
 
-  function resize() { const w = canvas.clientWidth, h = canvas.clientHeight; if (!w || !h) return; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
-  new ResizeObserver(resize).observe(canvas); resize();
+  // ---- layout: where the Earth sits. Wide: the canvas fills the hero and the Earth sits right of the copy, at a set
+  // radius in pixels (the field of view is chosen so the home distance gives that radius). Narrow: a centred square.
+  const wideQ = matchMedia('(min-width: 75.01rem)'), copyEl = document.querySelector('.hero-copy'), gridEl = document.querySelector('.hero-grid');
+  const HOME_A = Math.asin(1 / 5.4);
+  let W = 1, H = 1, px = 1000, keepOut = null;
+  function resize() {
+    W = canvas.clientWidth; H = canvas.clientHeight; if (!W || !H) return;
+    renderer.setSize(W, H, false); camera.aspect = W / H;
+    let r, cx, cy; keepOut = null;
+    if (wideQ.matches && copyEl && gridEl) {
+      const cr = canvas.getBoundingClientRect(), pr = copyEl.getBoundingClientRect(), gr = gridEl.getBoundingClientRect();
+      const gTop = gr.top - cr.top, gh = gr.height, copyRight = pr.right - cr.left;
+      r = Math.min(gh * 0.37, W * 0.23, 420);
+      cx = Math.min(W - r - Math.max(48, W * 0.04), Math.max(copyRight + r + 72, W * 0.66));
+      cy = gTop + gh * 0.5;
+      keepOut = { right: copyRight + 24, top: pr.top - cr.top - 24, bottom: gTop + gh };
+    } else { r = Math.min(W, H) * 0.35; cx = W / 2; cy = H / 2; }
+    const half = Math.tan(HOME_A) * (H / 2) / r;
+    camera.fov = 2 * Math.atan(half) / rad;
+    camera.setViewOffset(W, H, W / 2 - cx, H / 2 - cy, W, H); // also updates the projection
+    px = (H * DPR / 2) / half;
+    trails.forEach((tr) => { tr.mat.uniforms.px.value = px; });
+    // dots scale with the Earth, so a small globe is not buried under the catalogue
+    satMat.uniforms.size.value = 5.6 * DPR * Math.max(0.42, Math.min(1, r / 330));
+    wrap.style.setProperty('--cx', Math.round(cx) + 'px'); wrap.style.setProperty('--cy', Math.round(cy) + 'px'); wrap.style.setProperty('--r', Math.round(r) + 'px');
+  }
+  const ro = new ResizeObserver(resize); ro.observe(canvas); copyEl && ro.observe(copyEl); resize();
+  wideQ.addEventListener && wideQ.addEventListener('change', resize);
 
   const countEl = document.getElementById('globe-count'), clockEl = document.getElementById('globe-clock'), tag = document.getElementById('tag');
   const caption = document.getElementById('globe-caption'), capStep = document.getElementById('cap-step'), capNow = document.getElementById('cap-now');
@@ -172,7 +262,7 @@
   let farView = false, speed = K;
   const homeDist = () => (farView ? 12 : 5.4);
   document.querySelectorAll('[data-far]').forEach((b) => b.addEventListener('click', () => {
-    farView = b.getAttribute('aria-pressed') !== 'true'; b.setAttribute('aria-pressed', farView); view.tPitch = farView ? 0.55 : 0.24; if (!conj.active) view.tDist = homeDist();
+    farView = b.getAttribute('aria-pressed') !== 'true'; b.setAttribute('aria-pressed', farView); view.tPitch = farView ? 0.55 : 0.3; if (!conj.active) view.tDist = homeDist();
   }));
   const speedEl = document.getElementById('globe-speed');
   document.querySelectorAll('[data-speed]').forEach((b) => b.addEventListener('click', () => {
@@ -223,14 +313,32 @@
     if (view.focusK > 0.001) camDir.lerp(conj.aim, view.focusK).normalize();
     camera.position.copy(camDir).multiplyScalar(view.dist);
     camera.lookAt(0, 0, 0);
-    // keep the globe a little right of centre on wide screens
-    const w = canvas.clientWidth; camera.setViewOffset(w, canvas.clientHeight, 0, 0, w, canvas.clientHeight);
+    updateTrails(dt);
 
     if (conj.active) stepConj(t, now); else if (picked >= 0) showPick();
     renderer.render(scene, camera);
     if (clockEl && Math.floor(now / 500) !== frame.lastTick) { frame.lastTick = Math.floor(now / 500); clockEl.textContent = utc(simMs); }
   }
 
+  let trailFade = 1;
+  function updateTrails(dt) {
+    trailFade += ((conj.active ? 0.15 : 1) - trailFade) * Math.min(1, dt * 3);
+    trails.forEach((tr) => {
+      const on = groupOn[grp[tr.i]]; tr.pts.visible = on;
+      let head = ((simMs - tr.t0) / tr.period) % 1; if (head < 0) head += 1;
+      tr.mat.uniforms.head.value = head; tr.mat.uniforms.fade.value = trailFade;
+      const k = Math.min(tr.n - 1, Math.round(head * (tr.n - 1)));
+      tmp.set(tr.pos[k * 3], tr.pos[k * 3 + 1], tr.pos[k * 3 + 2]);
+      const cp = camera.position, d = tmp.clone().sub(cp), L = d.length(); d.divideScalar(L);
+      const tc = -cp.dot(d), behind = cp.lengthSq() - tc * tc < 1 && tc > 0 && tc < L;
+      tmp.project(camera);
+      const x = (tmp.x * 0.5 + 0.5) * W, y = (-tmp.y * 0.5 + 0.5) * H;
+      let hide = !on || behind || conj.active || trailFade < 0.6 || tmp.z > 1 || x < 8 || y < 8 || x > W - 110 || y > H - 24;
+      if (keepOut && ((x < keepOut.right && y > keepOut.top && y < keepOut.bottom) || y > keepOut.bottom - 30)) hide = true;
+      tr.el.style.transform = 'translate(' + Math.round(x + 10) + 'px,' + Math.round(y - 8) + 'px)';
+      tr.el.classList.toggle('on', !hide);
+    });
+  }
   function showPick() {
     const i = picked; tmp.set(satPos[i * 3], satPos[i * 3 + 1], satPos[i * 3 + 2]); const alt = Math.round((tmp.length() - 1) * R_E);
     tmp.project(camera); tag.style.left = (tmp.x * 0.5 + 0.5) * canvas.clientWidth + 'px'; tag.style.top = (-tmp.y * 0.5 + 0.5) * canvas.clientHeight + 'px';
