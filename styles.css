@@ -804,13 +804,13 @@ input::placeholder, textarea::placeholder { color: var(--color-muted); opacity: 
 .hero-person { position: absolute; left: 0; top: 0; bottom: 0; height: 100%; aspect-ratio: 1672 / 941; margin: 0; opacity: 0; transition: opacity 1.8s var(--ease-out); mix-blend-mode: lighten;
   -webkit-mask-image: linear-gradient(90deg, #000 40%, transparent 62%), linear-gradient(180deg, transparent 0, #000 10%, #000 86%, transparent 100%); -webkit-mask-composite: source-in;
   mask-image: linear-gradient(90deg, #000 40%, transparent 62%), linear-gradient(180deg, transparent 0, #000 10%, #000 86%, transparent 100%); mask-composite: intersect; }
-.hero-person.in { opacity: 0.62; }
-.hero-person img { width: 100%; height: 100%; object-fit: cover; display: block; filter: grayscale(1) brightness(0.95); transform-origin: 20% 60%; }
+.hero-person.in { opacity: 0.34; }
+.hero-person img { width: 100%; height: 100%; object-fit: cover; display: block; filter: grayscale(1) brightness(0.85) contrast(0.9); transform-origin: 20% 60%; }
 .hero-person.flip img { scale: -1 1; }
 @media (prefers-reduced-motion: no-preference) { .hero-person img { animation: person-drift 30s ease-in-out infinite alternate; } }
 @keyframes person-drift { from { transform: scale(1.02); } to { transform: scale(1.07) translate(-1%, -1%); } }
 .has-person .hero-copy h1, .has-person .hero-copy .lead, .has-person .hero-copy .run-note { text-shadow: 0 2px 28px rgba(2, 4, 10, 0.95), 0 0 2px rgba(2, 4, 10, 0.8); }
 .has-person .spacewalk { display: none; }
-@media (max-width: 118rem) { .hero-person.in { opacity: 0.5; } }
-@media (max-width: 75rem) { .hero-person { height: 70%; bottom: auto; } .hero-person.in { opacity: 0.34; } }
+@media (max-width: 118rem) { .hero-person.in { opacity: 0.28; } }
+@media (max-width: 75rem) { .hero-person { height: 70%; bottom: auto; } .hero-person.in { opacity: 0.2; } }
 .you-label { border-left-color: #FFD673; color: #FFE7A8; }
