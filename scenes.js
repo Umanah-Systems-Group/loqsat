@@ -13,6 +13,19 @@
   };
   let seed = 11; const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
 
+  // ---- the hero person: a different one on each visit, never the same twice in a row ----
+  (function person() {
+    const fig = document.querySelector('.hero-person'), list = window.LOQSAT_PEOPLE || [];
+    if (!fig || !list.length) return;
+    let last = -1; try { last = +localStorage.getItem('loqsat-person'); } catch (e) { /* storage blocked */ }
+    let i = Math.floor(Math.random() * list.length); if (list.length > 1 && i === last) i = (i + 1) % list.length;
+    try { localStorage.setItem('loqsat-person', String(i)); } catch (e) { /* storage blocked */ }
+    const p = list[i], img = fig.querySelector('img');
+    img.addEventListener('load', () => { fig.hidden = false; requestAnimationFrame(() => fig.classList.add('in')); document.querySelector('.hero').classList.add('has-person'); });
+    if (p.flip) fig.classList.add('flip');
+    img.src = 'people/' + p.src;
+  })();
+
   // ---- small pictures under the headline figures ----
   document.querySelectorAll('.viz').forEach((v) => {
     const kind = v.dataset.viz; let h = '';
