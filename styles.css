@@ -834,3 +834,81 @@ input::placeholder, textarea::placeholder { color: var(--color-muted); opacity: 
 #ops .who { fill: var(--color-ink-2); paint-order: stroke; stroke: #02040a; stroke-width: 4px; }
 #ops .provider text { paint-order: stroke; stroke: #02040a; stroke-width: 4px; }
 #ops .route { stroke: rgba(170, 205, 245, 0.28); }
+
+/* ===== phones: everything centred, symmetrical (founder, November 4, 2026) ===== */
+@media (max-width: 48rem) {
+  /* hero */
+  .hero-copy { text-align: center; justify-items: center; }
+  .hero h1, .hero-copy .lead, .run-note { margin-inline: auto; }
+  .hero-copy .actions { justify-content: center; }
+  .globe-wrap { justify-self: center; }
+  .globe-hint { text-align: center; }
+  .hero-bar .container { justify-items: center; text-align: center; }
+  .bar-stats { justify-content: center; justify-items: center; text-align: center; }
+  .bar-stats > div { justify-items: center; }
+  .hero-bar .chips { justify-content: center; }
+  .bar-note { text-align: center; }
+  /* section heads, page heads */
+  .section-head { grid-template-columns: minmax(0, 1fr); text-align: center; justify-items: center; }
+  .section-head h2, .section-head p { margin-inline: auto; }
+  .page-head .container { text-align: center; justify-items: center; }
+  .page-head .lead, .page-head h1 { margin-inline: auto; }
+  /* figures */
+  .figures > div, .figures--4 > div { text-align: center; justify-items: center; padding-inline: 0; }
+  .viz svg { margin-inline: auto; }
+  /* how it works */
+  .flow li { grid-template-columns: minmax(0, 1fr); text-align: center; justify-items: center; gap: var(--space-2xs); }
+  .ops-cap { justify-content: center; text-align: center; }
+  .ops-cap::before { display: none; }
+  .record-head { justify-content: center; text-align: center; }
+  .record .state { text-align: center; }
+  /* story */
+  .story-read { grid-template-columns: minmax(0, 1fr); text-align: center; justify-items: center; gap: var(--space-md); }
+  .story-read > div { justify-items: center; }
+  .timeline .cap { text-align: center; }
+  /* cards */
+  .cap-card, .who .card, .deliver .card, .award-facts > div { text-align: center; justify-items: center; }
+  .ic, .af-icon { margin-inline: auto; }
+  .ic svg, .af-icon svg { display: block; margin-inline: auto; }
+  /* planner */
+  .pl-side { text-align: center; }
+  .pl-side .slider-top { justify-content: space-between; text-align: left; }
+  .pl-play { justify-self: center; }
+  .pl-result { flex-direction: column; align-items: center; text-align: center; }
+  .pl-result > div { justify-items: center; }
+  .pl-clock { position: static; text-align: center; justify-items: center; margin-top: var(--space-sm); }
+  .js .flow.live li::before { left: 50%; right: auto; top: 0; bottom: auto; width: 48px; height: 2px; margin-left: -24px; transform: scaleX(0); transform-origin: center; }
+  .js .flow.live li.on::before { transform: scaleX(1); }
+  .planner-early, .planner-min, .planner-note { margin-inline: auto; text-align: center; }
+  /* neutral */
+  .split-copy { text-align: center; justify-items: center; }
+  .split-copy .lead, .split-copy p { margin-inline: auto; }
+  .gate { margin-inline: auto; display: block; }
+  .principles li { text-align: center; justify-items: center; }
+  /* awardable */
+  .award, .award.card { grid-template-columns: minmax(0, 1fr); justify-items: center; text-align: center; }
+  .award .body { justify-items: center; }
+  .award .fine { margin-inline: auto; }
+  /* earth signals */
+  .signal-list { align-items: center; text-align: center; }
+  .signal-points div { grid-template-columns: minmax(0, 1fr); justify-items: center; text-align: center; gap: var(--space-2xs); }
+  .signal-list > .btn { align-self: center; }
+  .newsletter { grid-template-columns: minmax(0, 1fr); text-align: center; justify-items: center; }
+  .newsletter input { width: 100%; }
+  .chart .readout, .chart figcaption { text-align: center; }
+  /* rows and steps (government, signals) */
+  .rows > div { grid-template-columns: minmax(0, 1fr); text-align: center; gap: var(--space-xs); }
+  .steps li { text-align: center; justify-items: center; }
+  /* contact */
+  .close .container { grid-template-columns: minmax(0, 1fr); }
+  .close .container > div:first-child { text-align: center; justify-items: center; }
+  .close .container > div:first-child .muted { margin-inline: auto; }
+  .close .container > div:last-child { justify-self: center; }
+  .form .field.wide .btn { width: 100%; }
+  /* footer */
+  .footer .container { text-align: center; }
+  .footer .letter { margin-inline: auto; }
+  .pillars { justify-content: center; }
+  .footer .cols { justify-content: center; text-align: center; }
+  .footer .cols ul { justify-content: center; }
+}
