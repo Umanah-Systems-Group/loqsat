@@ -824,3 +824,13 @@ input::placeholder, textarea::placeholder { color: var(--color-muted); opacity: 
 .section-art img { width: 100%; height: 100%; object-fit: cover; display: block; filter: grayscale(1) brightness(0.85) contrast(0.9); }
 #contact h2, #contact .muted { text-shadow: 0 2px 24px rgba(2, 4, 10, 0.95); }
 @media (max-width: 60rem) { .section-art { height: 55%; opacity: 0.22; } }
+
+/* operators scene: the engraving underneath, the animation on top */
+.ops-scene { padding: 0; overflow: hidden; background: #02040a; }
+.ops-scene .ops-cap { padding: var(--space-sm) var(--space-lg) var(--space-md); margin-top: 0; }
+#ops image { opacity: 0.92; }
+#ops .badge { fill: rgba(2, 4, 10, 0.85); stroke: rgba(143, 180, 255, 0.5); }
+#ops.warned .badge { stroke: var(--color-warn); } #ops.agreed .badge { stroke: var(--color-ok); }
+#ops .who { fill: var(--color-ink-2); paint-order: stroke; stroke: #02040a; stroke-width: 4px; }
+#ops .provider text { paint-order: stroke; stroke: #02040a; stroke-width: 4px; }
+#ops .route { stroke: rgba(170, 205, 245, 0.28); }
