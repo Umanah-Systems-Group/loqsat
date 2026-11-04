@@ -3,6 +3,5 @@
 window.LOQSAT_PEOPLE = [
   { src: 'newton.jpg', name: 'Isaac Newton' },
   { src: 'banneker.jpg', name: 'Benjamin Banneker' },
-  { src: 'zhang-heng.jpg', name: 'Zhang Heng' },
-  { src: 'aryabhata.jpg', name: 'Aryabhata' }
+  { src: 'zhang-heng.jpg', name: 'Zhang Heng' }
 ];
