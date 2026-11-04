@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en" class="js">
 <head>
-<meta name="description" content="LoqSat Earth Signals: weekly measurements of the Brazil sugar cane harvest from free satellite imagery.">
+<meta name="description" content="LoqSat Earth Signals: weekly measurements of the Brazil sugar cane harvest from orbit.">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,25 +26,51 @@
 <main id="main">
   <section class="page-head"><div class="container">
     <h1>Earth Signals</h1>
-    <p class="lead">Weekly measurements of the Brazil sugar cane harvest, history back to 2015.</p>
+    <p class="lead">Weekly measurements of the Brazil sugar cane harvest, from orbit.</p>
   </div></section>
 
   <section class="section" aria-labelledby="cane-h"><div class="container">
-    <div class="section-head"><h2 id="cane-h">Sugar cane harvest, measured from orbit.</h2><p>Share of standing cane cut so far, one Sentinel-2 tile east of Ribeirão Preto, 2024 season.</p></div>
+    <div class="section-head"><h2 id="cane-h">Sugar cane harvest, measured from orbit.</h2><p>Share of standing cane cut so far, 2024 season.</p></div>
     <figure class="chart ticks">
       <p class="readout" id="readout" aria-live="polite">Move across the chart to read a date.</p>
       <svg id="harvest" viewBox="0 0 960 360" role="img" aria-label="Harvest share rises from 0 percent in March to 66 percent by late November 2024, fastest from July to mid September."></svg>
-      <figcaption class="label" style="margin-top:var(--space-sm)">Prototype measurement on tile 23KKS, cloud-free looks only. Not yet checked against UNICA crush reports; no crop mask, so the share is diluted by pasture.</figcaption>
+      <figcaption class="label" style="margin-top:var(--space-sm)">Prototype measurement. Validation is in progress.</figcaption>
     </figure>
+  </div></section>
+
+  <section class="section section--tint" aria-labelledby="see-h"><div class="container">
+    <div class="signals-grid">
+      <figure class="photo scan-photo">
+        <img src="cane.jpg" width="1600" height="1000" loading="lazy" alt="Sugar cane fields in Brazil, seen straight down from orbit. Pale blocks are freshly cut fields.">
+        <span class="scan" aria-hidden="true"></span>
+      </figure>
+      <div class="signal-list">
+        <div class="signal-top"><h2 id="see-h">What orbit sees.</h2><p class="signal-lead">Standing cane is dark green. A cut field turns pale almost overnight. Week by week, the pale blocks spread across the region, and we count them.</p></div>
+        <dl class="signal-points">
+          <div><dt class="label">Why sugar cane first</dt><dd>Brazil’s Centre-South is the world’s largest sugar cane region. The pace of the harvest moves sugar and ethanol prices, and the official crush reports arrive only twice a month, after the fields are cut.</dd></div>
+          <div><dt class="label">Who it is for</dt><dd>Commodity funds, trading desks and agribusiness teams that want the harvest pace before the official numbers.</dd></div>
+        </dl>
+      </div>
+    </div>
+  </div></section>
+
+  <section class="section" aria-labelledby="season-h"><div class="container">
+    <div class="section-head"><h2 id="season-h">The 2024 season at a glance.</h2><p>From the prototype measurement above.</p></div>
+    <div class="figures figures--4">
+      <div><span class="big">Apr</span><span>First cut fields seen</span><span class="src">Early April 2024</span></div>
+      <div><span class="big">Jul<small>–Sep</small></span><span>Fastest stretch of the harvest</span><span class="src">Most of the season’s cutting</span></div>
+      <div><span class="big">50<small>%</small></span><span>Of the cane cut by late August</span><span class="src">Prototype measurement</span></div>
+      <div><span class="big">66<small>%</small></span><span>Cut by late November</span><span class="src">Prototype measurement</span></div>
+    </div>
   </div></section>
 
   <section class="section" aria-labelledby="how-h"><div class="container">
     <div class="section-head"><h2 id="how-h">How it reaches you.</h2><p>No dashboard to log into. The numbers arrive where you already work.</p></div>
     <div class="rows">
-      <div><h3>Weekly data files</h3><p>One file per signal, every week, with the full history back to 2015, when Sentinel-2 started.</p></div>
+      <div><h3>Weekly data files</h3><p>One file per signal, every week, with a multi-year history to test against.</p></div>
       <div><h3>A short weekly report</h3><p>One chart and one line per signal: what moved and by how much.</p></div>
       <div><h3>Historical sample and trial</h3><p>Funds and trading desks can test a signal against their own models before buying.</p></div>
-      <div><h3>Free, public imagery</h3><p>Copernicus Sentinel and Landsat, so every number can be traced to a picture.</p></div>
+      <div><h3>Traceable to a picture</h3><p>Every number links back to the satellite image it came from, so your team can check it.</p></div>
     </div>
   </div></section>
 </main>
@@ -103,4 +129,5 @@ document.querySelectorAll('form[action]').forEach((f) => f.addEventListener('sub
   catch (err) { st.textContent = 'That did not go through from this preview. On loqsat.com it reaches our inbox.'; }
 }));
 </script>
+<script src="site.js"></script>
 </body></html>

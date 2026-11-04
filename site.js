@@ -1,5 +1,5 @@
 /* Page motion: reveal sections as they scroll in, stagger card groups, count the headline figures up once,
-   focus the step in view, drift the Earth Signals photo, and run the maneuver planner. */
+   focus the step in view and drift the Earth Signals photo. The illustrated scenes and the planner are in scenes.js. */
 (() => {
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const els = document.querySelectorAll('[data-reveal], [data-stagger]');
@@ -44,57 +44,4 @@
   if (flow && !reduce) flow.classList.add('live');
   const req = () => { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } };
   addEventListener('scroll', req, { passive: true }); addEventListener('resize', req); onScroll();
-
-  // ---- maneuver planner ----
-  const form = document.getElementById('planner');
-  if (!form) return;
-  const $ = (id) => document.getElementById(id);
-  const inMiss = $('p-miss'), inLead = $('p-lead'), inDv = $('p-dv');
-  const PX = 60, CX = 320, CY = 180, EARLY = 24, SAFE = 1000; // 60 px per km on the drawing
-  let XMAX = 300;
-  const svg = $('planner-svg');
-  function frameSvg() { // a narrower window on small screens keeps the labels readable
-    const narrow = svg.clientWidth < 520, x0 = narrow ? 130 : 0, w = narrow ? 380 : 640;
-    svg.setAttribute('viewBox', x0 + ' 0 ' + w + ' 340'); XMAX = x0 + w - CX - 20;
-    $('p-along').setAttribute('x', x0 + 12); $('p-off').setAttribute('x', x0 + w - 12);
-  }
-  const km = (m) => (m < 1000 ? Math.round(m) + ' m' : (m < 100000 ? (m / 1000).toFixed(2) : Math.round(m / 1000).toLocaleString('en-US')) + ' km');
-  const cm = (v) => (v < 0.1 ? v.toFixed(2) : v < 10 ? v.toFixed(2).replace(/0$/, '') : v.toFixed(1)) + ' cm/s';
-  const fill = (el) => el.style.setProperty('--fill', ((el.value - el.min) / (el.max - el.min) * 100) + '%');
-  const shown = { miss: +inMiss.value, shift: 0 }, target = { miss: 0, shift: 0 };
-  let anim = 0, say = 0;
-  const live = $('p-live');
-  function draw() {
-    const y = CY - Math.min(shown.miss, 2600) / 1000 * PX, xr = shown.shift / 1000 * PX, x = CX + Math.min(xr, XMAX - 8);
-    $('p-track').setAttribute('y1', y); $('p-track').setAttribute('y2', y);
-    $('p-before').setAttribute('cy', y);
-    $('p-after').setAttribute('cx', x); $('p-after').setAttribute('cy', y);
-    $('p-push').setAttribute('y1', y); $('p-push').setAttribute('y2', y); $('p-push').setAttribute('x2', Math.max(CX, x - 9));
-    $('p-gap').setAttribute('x2', x); $('p-gap').setAttribute('y2', y);
-    $('p-off').setAttribute('y', y - 12); $('p-off').setAttribute('visibility', xr > XMAX - 8 ? 'visible' : 'hidden');
-  }
-  function tween() {
-    const k = 0.18; let done = true;
-    for (const key of ['miss', 'shift']) { const d = target[key] - shown[key]; if (Math.abs(d) > 0.5) { shown[key] += d * k; done = false; } else shown[key] = target[key]; }
-    draw(); anim = done ? 0 : requestAnimationFrame(tween);
-  }
-  function update() {
-    [inMiss, inLead, inDv].forEach(fill);
-    const miss = +inMiss.value, hours = +inLead.value, dv = +inDv.value; // m, h, cm/s
-    const shift = 3 * (dv / 100) * hours * 3600, sep = Math.hypot(miss, shift), ok = sep >= SAFE;
-    $('p-miss-out').textContent = km(miss); $('p-lead-out').textContent = hours + ' h'; $('p-dv-out').textContent = cm(dv);
-    $('p-sep').textContent = km(sep); $('p-shift').textContent = km(shift);
-    const v = $('p-verdict'); v.textContent = ok ? 'Clears 1 km' : 'Inside 1 km'; v.className = 'status ' + (ok ? 'next' : 'warn');
-    const n = (hours + EARLY) / hours, dvEarly = dv / n;
-    $('p-early').innerHTML = 'Act ' + EARLY + ' hours earlier (' + (hours + EARLY) + ' h out) and a ' + cm(dvEarly) + ' burn gives the same result: <b>a burn ' + n.toFixed(1) + ' times smaller</b>.';
-    const need = miss >= SAFE ? 0 : Math.sqrt(SAFE * SAFE - miss * miss) / (3 * hours * 3600) * 100;
-    $('p-min').textContent = miss >= SAFE ? 'Already outside 1 km with no burn.' : 'Smallest burn that clears 1 km at ' + hours + ' h: ' + cm(need) + '. At ' + (hours + EARLY) + ' h it would be ' + cm(need * hours / (hours + EARLY)) + '.';
-    target.miss = miss; target.shift = shift;
-    inMiss.setAttribute('aria-valuetext', km(miss)); inLead.setAttribute('aria-valuetext', hours + ' hours'); inDv.setAttribute('aria-valuetext', cm(dv));
-    clearTimeout(say); say = setTimeout(() => { live.textContent = 'New separation ' + km(sep) + ', ' + (ok ? 'clears' : 'inside') + ' 1 km. ' + $('p-early').textContent; }, 600);
-    if (reduce) { shown.miss = miss; shown.shift = shift; draw(); } else if (!anim) anim = requestAnimationFrame(tween);
-  }
-  form.addEventListener('input', update);
-  frameSvg(); addEventListener('resize', () => { frameSvg(); draw(); });
-  update();
 })();

@@ -70,10 +70,10 @@
       void main(){
         vec3 n=normalize(vN); vec3 v=normalize(cameraPosition-vW); float d=dot(n,sun);
         vec3 dc=texture2D(day,vUv).rgb; vec3 nc=texture2D(night,vUv).rgb; float w=texture2D(water,vUv).r;
-        float lit=smoothstep(-0.08,0.20,d); float fr=pow(1.0-max(dot(n,v),0.0),2.4);
-        vec3 dayCol=dc*(0.18+1.0*clamp(d+0.12,0.0,1.0));
+        float lit=smoothstep(-0.16,0.16,d); float fr=pow(1.0-max(dot(n,v),0.0),2.4);
+        vec3 dayCol=dc*(0.34+1.2*clamp(d+0.18,0.0,1.0));
         vec3 h=normalize(sun+v); float spec=pow(max(dot(n,h),0.0),110.0)*w*0.26*smoothstep(0.15,0.5,d);
-        float city=smoothstep(0.16,0.55,nc.r); vec3 nightCol=nc*city*vec3(2.2,1.75,1.1)+dc*vec3(0.035,0.05,0.095);
+        float city=smoothstep(0.16,0.55,nc.r); vec3 nightCol=nc*city*vec3(2.2,1.75,1.1)+dc*vec3(0.08,0.10,0.16);
         vec3 col=mix(nightCol,dayCol,lit)+spec*vec3(1.0,0.93,0.82);
         col+=vec3(1.0,0.45,0.2)*exp(-pow((d-0.02)/0.05,2.0))*0.035*(1.0-fr);
         col=mix(col,vec3(0.40,0.66,1.0),fr*0.75*(0.12+0.88*smoothstep(-0.25,0.35,d)));
@@ -122,11 +122,11 @@
   });
   const GROUPS = [
     // the sign-in's colours; alpha dims the crowded groups so the Earth stays readable through them
-    { key: 'starlink', re: /^STARLINK/, color: 0x8FE8FF, alpha: 0.85, scale: 1 },
+    { key: 'starlink', re: /^STARLINK/, color: 0x8FE8FF, alpha: 0.55, scale: 0.8 },
     { key: 'oneweb', re: /^ONEWEB/, color: 0xBAA3FF, alpha: 0.9, scale: 1.1 },
     { key: 'nav', re: /NAVSTAR|GPS |GLONASS|GALILEO|GSAT0|BEIDOU|IRNSS|QZS/, color: 0xFFD673, alpha: 1, scale: 1.6 },
     { key: 'stations', re: /^(ISS \(|CSS \(|TIANGONG)/, color: 0xFF7A66, alpha: 1, scale: 2.4 },
-    { key: 'other', re: /./, color: 0x7FA0FF, alpha: 0.7, scale: 1 }
+    { key: 'other', re: /./, color: 0x7FA0FF, alpha: 0.5, scale: 0.85 }
   ];
   const sat = window.satellite, cat = window.LOQSAT_CATALOGUE;
   const rows = (sat && cat && cat.rows) || [];
@@ -210,9 +210,9 @@
   marker.visible = false; scene.add(marker);
 
   // ---- camera: follows the sun so the lit side faces the viewer; drag to turn ----
-  const view = { yaw: -1.2, pitch: 0.3, dist: 5.4, tYaw: -1.2, tPitch: 0.3, tDist: 5.4, focus: null, focusK: 0 };
-  // with nobody touching it, the view turns slowly round the polar axis (west to east), which shows the Earth
-  // turning with its satellites and its real lighting together; it waits a moment after a drag or key press
+  const view = { yaw: -0.55, pitch: 0.3, dist: 5.4, tYaw: -0.55, tPitch: 0.3, tDist: 5.4, focus: null, focusK: 0 };
+  // with nobody touching it, the view eases back to the sunlit side and sways gently there, so the continents stay
+  // in view while the Earth turns underneath with its satellites; it waits a moment after a drag or key press
   const SPIN = 0.05, SPIN_WAIT = 2.5;
   let simMs = Date.now(), last = performance.now(), dragging = null, idle = 0;
   canvas.addEventListener('pointerdown', (e) => { dragging = { x: e.clientX, y: e.clientY }; canvas.setPointerCapture(e.pointerId); });
@@ -243,7 +243,7 @@
     px = (H * DPR / 2) / half;
     trails.forEach((tr) => { tr.mat.uniforms.px.value = px; });
     // dots scale with the Earth, so a small globe is not buried under the catalogue
-    satMat.uniforms.size.value = 5.6 * DPR * Math.max(0.42, Math.min(1, r / 330));
+    satMat.uniforms.size.value = 4.2 * DPR * Math.max(0.42, Math.min(1, r / 330));
     wrap.style.setProperty('--cx', Math.round(cx) + 'px'); wrap.style.setProperty('--cy', Math.round(cy) + 'px'); wrap.style.setProperty('--r', Math.round(r) + 'px');
   }
   const ro = new ResizeObserver(resize); ro.observe(canvas); copyEl && ro.observe(copyEl); resize();
@@ -303,7 +303,7 @@
     satMat.uniforms.dim.value += ((conj.active ? 0.22 : 1) - satMat.uniforms.dim.value) * Math.min(1, dt * 3);
 
     // camera
-    if (!dragging && !conj.active && !reduce) { idle += dt; if (idle > SPIN_WAIT) { const s = SPIN * dt * Math.min(1, (idle - SPIN_WAIT) / 2); view.tYaw -= s; view.yaw -= s; } }
+    if (!dragging && !conj.active && !reduce) { idle += dt; if (idle > SPIN_WAIT) { const home = -0.55 + 0.4 * Math.sin(now / 1000 * SPIN); let d = home - view.tYaw; d -= Math.round(d / (2 * Math.PI)) * 2 * Math.PI; view.tYaw += d * Math.min(1, dt * 0.6 * Math.min(1, (idle - SPIN_WAIT) / 3)); } }
     const k = 1 - Math.pow(0.0015, dt);
     view.yaw += (view.tYaw - view.yaw) * k; view.pitch += (view.tPitch - view.pitch) * k; view.dist += (view.tDist - view.dist) * k * 0.6;
     const sunAz = Math.atan2(-a.sun.z, a.sun.x);

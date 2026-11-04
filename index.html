@@ -32,6 +32,46 @@
 <main id="main">
   <!-- HERO -->
   <section class="hero" aria-labelledby="hero-h">
+    <div class="hero-art" aria-hidden="true">
+      <div class="haze haze--a"></div><div class="haze haze--b"></div>
+      <svg class="spacewalk" viewBox="0 0 440 340" focusable="false">
+        <defs>
+          <radialGradient id="visor" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#8fd9ff" stop-opacity="0.55"/><stop offset="0.45" stop-color="#16324f"/><stop offset="1" stop-color="#050a14"/></radialGradient>
+          <linearGradient id="suit" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a2638"/><stop offset="1" stop-color="#070d18"/></linearGradient>
+          <path id="arm-r" d="M20 -12 C 48 -20 66 -44 82 -70"/>
+          <path id="arm-l" d="M-20 -6 C -42 12 -48 34 -40 54"/>
+          <path id="leg-r" d="M14 46 C 24 76 20 98 34 122"/>
+          <path id="leg-l" d="M-8 48 C -14 78 -30 92 -44 114"/>
+        </defs>
+        <g class="tether"><path d="M128 228 C 86 270 40 250 8 300 S -40 360 -60 340"/></g>
+        <g class="sat-float"><g transform="translate(332 96) rotate(16)">
+          <g class="panel"><rect x="-104" y="-13" width="70" height="26" rx="2"/><path d="M-90 -13v26M-76 -13v26M-62 -13v26M-48 -13v26M-104 0h70"/></g>
+          <g class="panel"><rect x="34" y="-13" width="70" height="26" rx="2"/><path d="M48 -13v26M62 -13v26M76 -13v26M90 -13v26M34 0h70"/></g>
+          <path class="line" d="M-34 0h12M22 0h12"/>
+          <rect class="body" x="-22" y="-20" width="44" height="40" rx="4"/>
+          <path class="line" d="M-22 -6h44M-8 -20v40"/>
+          <path class="line" d="M0 -20v-14"/><path class="dish" d="M-14 -40 Q0 -26 14 -40"/>
+          <circle class="blink" cx="14" cy="12" r="2.6"/>
+        </g></g>
+        <g class="astro-float"><g transform="translate(150 180) rotate(-14)">
+          <rect class="pack" x="-46" y="-34" width="64" height="84" rx="12"/>
+          <use href="#leg-l" class="tube-o"/><use href="#leg-l" class="tube-i"/>
+          <use href="#leg-r" class="tube-o"/><use href="#leg-r" class="tube-i"/>
+          <rect class="boot" x="-58" y="108" width="26" height="16" rx="6" transform="rotate(-28 -45 116)"/>
+          <rect class="boot" x="24" y="116" width="26" height="16" rx="6" transform="rotate(18 37 124)"/>
+          <rect class="torso" x="-28" y="-28" width="58" height="80" rx="22"/>
+          <rect class="panel-c" x="-12" y="-6" width="28" height="18" rx="4"/>
+          <circle class="led" cx="-4" cy="3" r="2"/><circle class="led led--b" cx="4" cy="3" r="2"/>
+          <use href="#arm-l" class="tube-o"/><use href="#arm-l" class="tube-i"/>
+          <circle class="glove" cx="-40" cy="56" r="9"/>
+          <g class="reach"><use href="#arm-r" class="tube-o"/><use href="#arm-r" class="tube-i"/><circle class="glove" cx="82" cy="-72" r="9"/></g>
+          <circle class="helmet" cx="2" cy="-54" r="31"/>
+          <ellipse class="visor" cx="9" cy="-54" rx="21" ry="16" fill="url(#visor)"/>
+          <path class="glint" d="M-2 -64 Q6 -70 16 -66"/>
+        </g></g>
+        <g class="specks"><circle cx="40" cy="40" r="1.4"/><circle cx="250" cy="22" r="1"/><circle cx="410" cy="200" r="1.3"/><circle cx="300" cy="300" r="1"/><circle cx="90" cy="120" r="0.9"/></g>
+      </svg>
+    </div>
     <div class="container hero-grid">
       <div class="hero-copy">
         <h1 id="hero-h">Coordination is the <em>missing layer</em> in orbit.</h1>
@@ -74,14 +114,22 @@
 
   <!-- AWARDABLE BAND -->
   <section class="awardable" aria-labelledby="awardable-h">
+    <canvas class="gold-dust" aria-hidden="true"></canvas>
     <div class="container awardable-inner">
       <p class="awardable-kicker" data-reveal>Defense innovation marketplace</p>
       <h2 class="awardable-h" id="awardable-h" data-reveal>Assessed as Awardable.</h2>
       <p class="awardable-lead" data-reveal="2">LoqSat was assessed as Awardable on the CDAO Tradewinds Solutions Marketplace.</p>
       <a class="awardable-badge" href="https://www.tradewindai.com" target="_blank" rel="noopener" data-reveal="2">
+        <span class="badge-orbit" aria-hidden="true"><i></i><i></i><b></b></span>
         <span class="badge-tile"><img src="badge-tradewinds-awardable.png" width="196" height="196" alt="Awardable badge, CDAO Tradewinds Solutions Marketplace"></span>
         <span class="awardable-name">CDAO Tradewinds Solutions Marketplace</span>
       </a>
+      <div class="award-facts" data-stagger>
+        <div><span class="af-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg></span><h3>Found by government buyers</h3><p>Authorized buyers can find LoqSat on the marketplace, watch the solution video and ask for a demonstration.</p></div>
+        <div><span class="af-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 18h16M6 18V9l6-4 6 4v9M10 18v-5h4v5"/></svg></span><h3>A route to a prototype</h3><p>Milestone-based prototype agreements, each milestone ending in something your team can run.</p></div>
+        <div><span class="af-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12l4 4 10-10"/></svg></span><h3>Working today</h3><p>The full coordination flow runs end to end in our demo, from the first warning to the signed-off record.</p></div>
+      </div>
+      <a class="btn award-cta" href="government.html" data-reveal="3">How to work with us</a>
       <p class="awardable-fine" data-reveal="3">Assessment as Awardable does not constitute a government contract, funding commitment, endorsement, sole-source authorization, or guarantee of an award.</p>
     </div>
   </section>
@@ -94,10 +142,10 @@
         <p>Operators maneuver thousands of satellites with no neutral infrastructure and no verified record of what they agreed. The problem is not awareness. The problem is coordination.</p>
       </div>
       <div class="figures figures--4" data-reveal="2">
-        <div><span class="big">46,600</span><span>Objects tracked in orbit</span><span class="src">CSIS, January 2025</span></div>
-        <div><span class="big">1.2<small>M</small></span><span>Debris objects larger than 1 cm</span><span class="src">ESA Space Environment Report 2025</span></div>
-        <div><span class="big">50,000</span><span>Avoidance maneuvers by one constellation in six months</span><span class="src">SpaceX report, 2024</span></div>
-        <div><span class="big">83<small>%</small></span><span>Cut to the civil coordination system’s FY2027 budget</span><span class="src">SpaceNews, April 2026</span></div>
+        <div><span class="big">46,600</span><span class="viz" data-viz="dots" aria-hidden="true"></span><span>Objects tracked in orbit</span><span class="src">CSIS, January 2025</span></div>
+        <div><span class="big">1.2<small>M</small></span><span class="viz" data-viz="dust" aria-hidden="true"></span><span>Debris objects larger than 1 cm</span><span class="src">ESA Space Environment Report 2025</span></div>
+        <div><span class="big">50,000</span><span class="viz" data-viz="ticks" aria-hidden="true"></span><span>Avoidance maneuvers by one constellation in six months</span><span class="src">SpaceX report, 2024</span></div>
+        <div><span class="big">83<small>%</small></span><span class="viz" data-viz="cut" aria-hidden="true"></span><span>Cut to the civil coordination system’s FY2027 budget</span><span class="src">SpaceNews, April 2026</span></div>
       </div>
     </div>
   </section>
@@ -109,6 +157,44 @@
         <h2 id="how-h">One close approach, coordinated end to end.</h2>
         <p>Press Run and watch it on the globe. Every step lands on a record that nobody can quietly change.</p>
       </div>
+      <figure class="ops-scene" data-reveal="2">
+        <svg id="ops" viewBox="0 0 960 300" role="img" aria-labelledby="ops-t">
+          <title id="ops-t">Two satellite operators at their consoles. A warning reaches both at the same moment, they trade an offer and a counter, accept, and the agreement is sealed onto a shared record.</title>
+          <defs>
+            <linearGradient id="ops-floor" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#47D7EA" stop-opacity="0.10"/><stop offset="1" stop-color="#47D7EA" stop-opacity="0"/></linearGradient>
+            <g id="op-figure">
+              <path d="M-46 62 h40 M-26 62 v38 M-44 100 h36 M-46 20 v42" fill="none" stroke="#CBD8E4" stroke-opacity="0.75" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M-38 66 C -42 40 -36 14 -22 4 C -10 -4 6 -2 12 8 L 14 64 Z" fill="#152237" stroke="#EBF3FA" stroke-opacity="0.9" stroke-width="1.5"/>
+              <path d="M2 18 C 18 30 30 38 48 40" fill="none" stroke="#CBD8E4" stroke-opacity="0.75" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="-8" cy="-18" r="17" fill="#152237" stroke="#EBF3FA" stroke-opacity="0.9" stroke-width="1.5"/>
+              <path d="M-26 -22 A 19 19 0 0 1 10 -26 M8 -14 q 10 6 14 0" fill="none" stroke="#47D7EA" stroke-width="2" stroke-linecap="round"/>
+              <path d="M30 46 h110 M44 46 v56 M128 46 v56" fill="none" stroke="#CBD8E4" stroke-opacity="0.75" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <rect x="62" y="-24" width="76" height="56" rx="5" fill="#0A1626" stroke="#8FB4FF" stroke-opacity="0.85" stroke-width="1.5"/>
+              <path d="M100 32 v14" fill="none" stroke="#CBD8E4" stroke-opacity="0.75" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </g>
+          </defs>
+          <rect x="0" y="230" width="960" height="70" fill="url(#ops-floor)"/>
+          <g class="provider" transform="translate(480 46)">
+            <path class="dish" d="M-22 -6 Q0 22 22 -6"/><path class="stand" d="M0 8 v18 M-12 28 h24"/>
+            <path class="pulse" d="M-30 -18 Q0 -40 30 -18"/><path class="pulse p2" d="M-40 -26 Q0 -56 40 -26"/>
+            <text y="48" text-anchor="middle">Tracking provider</text>
+          </g>
+          <g transform="translate(150 150)"><use href="#op-figure"/><g class="scr" id="scr-a" transform="translate(100 4)"><path class="warn" d="M0 -14 L13 9 H-13 Z"/><path class="ok" d="M-11 0 l7 7 l14 -14"/></g><text class="who" x="40" y="128" text-anchor="middle">Operator A</text></g>
+          <g transform="translate(810 150) scale(-1 1)"><use href="#op-figure"/><g class="scr" id="scr-b" transform="translate(100 4) scale(-1 1)"><path class="warn" d="M0 -14 L13 9 H-13 Z"/><path class="ok" d="M-11 0 l7 7 l14 -14"/></g></g>
+          <text class="who" x="770" y="278" text-anchor="middle">Operator B</text>
+          <path id="ops-pa" class="route" d="M462 70 C 380 90 300 110 252 130"/>
+          <path id="ops-pb" class="route" d="M498 70 C 580 90 660 110 708 130"/>
+          <path id="ops-ab" class="route route--talk" d="M262 150 C 400 110 560 110 698 150"/>
+          <circle class="pkt" id="pkt-a" r="5"/><circle class="pkt" id="pkt-b" r="5"/>
+          <g class="bubble" id="bub"><rect x="-44" y="-14" width="88" height="28" rx="14"/><text y="5" text-anchor="middle" id="bub-t">Offer</text></g>
+          <g class="chain" transform="translate(400 250)">
+            <rect class="blk" x="0" y="0" width="34" height="22" rx="4"/><rect class="blk" x="44" y="0" width="34" height="22" rx="4"/><rect class="blk" x="88" y="0" width="34" height="22" rx="4"/><rect class="blk" x="132" y="0" width="34" height="22" rx="4"/>
+            <path class="link" d="M34 11 h10 M78 11 h10 M122 11 h10"/>
+            <g class="lock" transform="translate(178 2)"><rect x="0" y="7" width="16" height="12" rx="2"/><path d="M3 7 v-3 a5 5 0 0 1 10 0 v3"/></g>
+          </g>
+        </svg>
+        <figcaption class="ops-cap" aria-live="off"><span class="measure" id="ops-step">01</span> <span id="ops-say">A warning reaches both operators at the same moment.</span></figcaption>
+      </figure>
       <div class="how" data-reveal="2">
         <ol class="flow" data-stagger>
           <li><span class="n measure">01</span><div><h3>Screening request</h3><p>An operator asks for its spacecraft to be screened against the catalogue.</p></div></li>
@@ -145,26 +231,29 @@
         <h2 id="time-h">Two days, one decision.</h2>
         <p>From the first warning to the closest approach, both operators work from the same page and the same clock.</p>
       </div>
-      <figure class="timeline" data-reveal="3" tabindex="0" aria-label="Timeline of one coordination event">
-        <svg viewBox="0 0 960 150" role="img" aria-label="One coordination event on a UTC axis: screening request, conjunction message, advisory, offer, agreement, then closest approach.">
-          <line x1="20" y1="90" x2="940" y2="90" stroke="var(--color-rule)" />
+      <figure class="timeline story" data-reveal="3" aria-label="Timeline of one coordination event">
+        <div class="story-read">
+          <div><span class="label">Clock</span><span class="measure story-clock" id="st-clock">T-48 h</span></div>
+          <div class="story-now"><span class="label">What is happening</span><span id="st-say">A routine screening request goes in.</span></div>
+          <div><span class="label">Predicted miss</span><span class="measure" id="st-miss">182 m</span> <span class="status warn" id="st-verdict">Too close</span></div>
+          <button class="btn btn--sm" type="button" id="st-play">Replay</button>
+        </div>
+        <svg id="story" viewBox="0 0 960 170" role="img" aria-label="One coordination event on a 48 hour clock: screening request at 47 hours out, warning and advisory at 36 hours, offer and counter at 26 hours, agreement recorded at 20 hours, burn at 12 hours, then a safe pass at closest approach.">
+          <line x1="20" y1="120" x2="940" y2="120" stroke="var(--color-rule)"/>
+          <rect id="st-band" x="250" y="115" width="0" height="10" rx="5" fill="var(--color-accent-2)" opacity="0.85"/>
+          <line id="st-prog" x1="20" y1="120" x2="20" y2="120" stroke="var(--color-accent)" stroke-width="2"/>
           <g fill="var(--color-muted)" font-family="var(--font-outlier)" font-size="12">
-            <line x1="20" y1="86" x2="20" y2="94" stroke="var(--color-muted-2)"/><text x="20" y="116">T-48 h</text>
-            <line x1="250" y1="86" x2="250" y2="94" stroke="var(--color-muted-2)"/><text x="250" y="116">T-36 h</text>
-            <line x1="480" y1="86" x2="480" y2="94" stroke="var(--color-muted-2)"/><text x="480" y="116">T-24 h</text>
-            <line x1="710" y1="86" x2="710" y2="94" stroke="var(--color-muted-2)"/><text x="710" y="116">T-12 h</text>
-            <text x="916" y="116">TCA</text>
+            <text x="20" y="150">T-48 h</text><text x="250" y="150">T-36 h</text><text x="480" y="150">T-24 h</text><text x="710" y="150">T-12 h</text><text x="916" y="150">TCA</text>
           </g>
-          <rect x="250" y="85" width="400" height="10" rx="5" fill="var(--color-accent-2)" opacity="0.85"/>
-          <g font-family="var(--font-body)" font-size="13" fill="var(--color-ink-2)">
-            <line x1="40" y1="40" x2="40" y2="90" stroke="var(--color-accent)"/><text x="46" y="44">Screening request</text>
-            <line x1="250" y1="58" x2="250" y2="90" stroke="var(--color-accent)"/><text x="256" y="62">Warning in, advisory out</text>
-            <line x1="470" y1="40" x2="470" y2="90" stroke="var(--color-accent)"/><text x="476" y="44">Offer, counter</text>
-            <line x1="650" y1="58" x2="650" y2="90" stroke="var(--color-accent)"/><text x="656" y="62">Agreed, recorded</text>
-            <line x1="940" y1="40" x2="940" y2="90" stroke="var(--color-ink)"/><text x="934" y="34" text-anchor="end">Closest approach</text>
-          </g>
+          <g class="ms" data-at="1"><line x1="40" y1="64" x2="40" y2="120"/><text x="46" y="68">Screening request</text></g>
+          <g class="ms" data-at="12"><line x1="250" y1="88" x2="250" y2="120"/><text x="256" y="92">Warning in, advisory out</text></g>
+          <g class="ms" data-at="22"><line x1="440" y1="40" x2="440" y2="120"/><text x="446" y="44">Offer, counter</text></g>
+          <g class="ms" data-at="28"><line x1="557" y1="88" x2="557" y2="120"/><text x="563" y="92">Agreed, recorded</text></g>
+          <g class="ms" data-at="36"><line x1="710" y1="40" x2="710" y2="120"/><text x="716" y="44">Burn</text></g>
+          <g class="ms ms--end" data-at="48"><line x1="940" y1="64" x2="940" y2="120"/><text x="934" y="58" text-anchor="end">Safe pass</text></g>
+          <g id="st-head"><line x1="0" y1="20" x2="0" y2="128" stroke="var(--color-ink)" stroke-opacity="0.5" stroke-dasharray="2 4"/><circle cx="0" cy="120" r="6" fill="var(--color-accent)"/><circle class="st-ping" cx="0" cy="120" r="6" fill="none" stroke="var(--color-accent)"/></g>
         </svg>
-        <figcaption class="cap">One sample event. The blue band is the negotiation window.</figcaption>
+        <figcaption class="cap">One sample event. The blue band is the negotiation window, from the first warning to the agreement.</figcaption>
       </figure>
     </div>
   </section>
@@ -177,12 +266,12 @@
         <p>Less time on the phone, a clear answer on who moves, and proof of what was agreed.</p>
       </div>
       <div class="caps caps--3" data-stagger>
-        <article class="cap-card card"><span class="measure n">01</span><h3>Warnings that reach both sides</h3><p>Every close approach goes to both operators at the same moment, in the standard format their teams already read.</p></article>
-        <article class="cap-card card"><span class="measure n">02</span><h3>Agree on who moves</h3><p>Offer, counter and accept a maneuver in one place, in minutes instead of a chain of calls and emails.</p></article>
-        <article class="cap-card card"><span class="measure n">03</span><h3>Proof of what was agreed</h3><p>A record nobody can quietly change, which you, a regulator or an insurer can check at any time.</p></article>
-        <article class="cap-card card"><span class="measure n">04</span><h3>Bring your own data</h3><p>Work from public tracking or your commercial provider, and change providers without changing how you work.</p></article>
-        <article class="cap-card card"><span class="measure n">05</span><h3>Context with every warning</h3><p>Space weather and other conditions that affect a close approach arrive with the warning itself.</p></article>
-        <article class="cap-card card"><span class="measure n">06</span><h3>Ready for compliance</h3><p>Coordination history in a form licensing offices, auditors and underwriters can use.</p></article>
+        <article class="cap-card card"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v3M5 9l-2-2M19 9l2-2"/><path d="M6 20a6 6 0 0 1 12 0"/><circle cx="12" cy="12" r="2.2"/></svg></span><span class="measure n">01</span><h3>Warnings that reach both sides</h3><p>Every close approach goes to both operators at the same moment, in the standard format their teams already read.</p></article>
+        <article class="cap-card card"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7h11l-3-3M20 17H9l3 3"/></svg></span><span class="measure n">02</span><h3>Agree on who moves</h3><p>Offer, counter and accept a maneuver in one place, in minutes instead of a chain of calls and emails.</p></article>
+        <article class="cap-card card"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></span><span class="measure n">03</span><h3>Proof of what was agreed</h3><p>A record nobody can quietly change, which you, a regulator or an insurer can check at any time.</p></article>
+        <article class="cap-card card"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="7" ry="2.5"/><path d="M5 6v6c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5V6M5 12v6c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5v-6"/></svg></span><span class="measure n">04</span><h3>Bring your own data</h3><p>Work from public tracking or your commercial provider, and change providers without changing how you work.</p></article>
+        <article class="cap-card card"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg></span><span class="measure n">05</span><h3>Context with every warning</h3><p>Space weather and other conditions that affect a close approach arrive with the warning itself.</p></article>
+        <article class="cap-card card"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 13l2 2 4-4"/></svg></span><span class="measure n">06</span><h3>Ready for compliance</h3><p>Coordination history in a form licensing offices, auditors and underwriters can use.</p></article>
       </div>
     </div>
   </section>
@@ -192,55 +281,51 @@
     <div class="container">
       <div class="section-head" data-reveal>
         <h2 id="plan-h">Act early and the avoidance gets cheap.</h2>
-        <p>Move the sliders. A small push along the orbit, made hours ahead, opens up a large gap at the closest approach. The earlier both sides agree, the smaller the burn.</p>
+        <p>Two satellites are on course to pass 200 m apart. The safe line is 1 km. Pick when your satellite fires and how hard, then press Play.</p>
       </div>
-      <div class="planner card" data-reveal="2">
-        <form class="planner-controls" id="planner" aria-label="Maneuver planner" onsubmit="return false">
-          <div class="slider">
-            <div class="slider-top"><label for="p-miss">Current miss distance</label><output class="measure" aria-live="off" for="p-miss" id="p-miss-out">182 m</output></div>
-            <input type="range" id="p-miss" min="50" max="2000" step="1" value="182" aria-describedby="p-miss-help">
-            <p class="slider-range measure" id="p-miss-help"><span>50 m</span><span>2 km</span></p>
-          </div>
-          <div class="slider">
-            <div class="slider-top"><label for="p-lead">Burn made before closest approach</label><output class="measure" aria-live="off" for="p-lead" id="p-lead-out">12 h</output></div>
-            <input type="range" id="p-lead" min="1" max="72" step="1" value="12" aria-describedby="p-lead-help">
-            <p class="slider-range measure" id="p-lead-help"><span>1 h</span><span>72 h</span></p>
-          </div>
-          <div class="slider">
-            <div class="slider-top"><label for="p-dv">Burn size</label><output class="measure" aria-live="off" for="p-dv" id="p-dv-out">1.0 cm/s</output></div>
-            <input type="range" id="p-dv" min="0.5" max="20" step="0.5" value="1" aria-describedby="p-dv-help">
-            <p class="slider-range measure" id="p-dv-help"><span>0.5 cm/s</span><span>20 cm/s</span></p>
-          </div>
-          <p class="planner-rule">Rule of thumb: a small push along the orbit shifts where the spacecraft arrives by about 3 × burn × time to closest approach. The new gap combines that shift with today’s miss distance.</p>
-        </form>
-        <div class="planner-view">
-          <div class="planner-read" id="planner-read">
-            <div><span class="label">New separation</span><span class="measure big-read" id="p-sep">1.31 km</span></div>
-            <div><span class="label">Along-track shift</span><span class="measure" id="p-shift">1.30 km</span></div>
-            <div><span class="label">1 km threshold</span><span class="status next" id="p-verdict">Clears 1 km</span></div>
-          </div>
-          <svg class="planner-svg" id="planner-svg" viewBox="0 0 640 340" role="img" aria-labelledby="planner-svg-t">
-            <title id="planner-svg-t">Encounter view at closest approach. The other satellite sits at the centre inside a dashed 1 km ring. Your spacecraft starts at the current miss distance and the burn moves it along its track.</title>
-            <defs><marker id="p-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--color-accent)"/></marker></defs>
-            <g class="p-grid" stroke="var(--color-rule-2)"><line x1="20" y1="180" x2="620" y2="180"/><line x1="320" y1="20" x2="320" y2="320"/></g>
-            <circle class="p-ring" cx="320" cy="180" r="60" fill="color-mix(in oklab, var(--color-accent-2) 7%, transparent)" stroke="var(--color-accent-2)" stroke-dasharray="4 4"/>
-            <text class="p-t p-halo" x="366" y="128" fill="var(--color-accent-2)">1 km</text>
-            <line class="p-other" x1="250" y1="320" x2="390" y2="40" stroke="var(--color-accent-2)" stroke-opacity="0.45"/>
-            <line id="p-track" x1="20" y1="169" x2="620" y2="169" stroke="var(--color-accent)" stroke-opacity="0.45"/>
-            <line id="p-gap" x1="320" y1="180" x2="398" y2="169" stroke="var(--color-ink)" stroke-dasharray="2 3"/>
-            <line id="p-push" x1="320" y1="169" x2="398" y2="169" stroke="var(--color-accent)" stroke-width="2" marker-end="url(#p-arrow)"/>
-            <circle cx="320" cy="180" r="6" fill="var(--color-accent-2)"/>
-            <circle id="p-before" cx="320" cy="169" r="6" fill="var(--color-paper)" stroke="var(--color-accent)" stroke-width="2"/>
-            <circle id="p-after" cx="398" cy="169" r="7" fill="var(--color-accent)"/>
-            <text id="p-off" class="p-t p-halo" x="612" y="160" text-anchor="end" fill="var(--color-accent)" visibility="hidden">off the chart →</text>
-            <g class="p-t p-halo" fill="var(--color-muted)"><text id="p-along" x="28" y="326">Along the orbit →</text><text x="326" y="34">Radial</text><text x="312" y="212" text-anchor="end">Other satellite</text></g>
+      <div class="pl card" data-reveal="2">
+        <div class="pl-stage">
+          <svg id="pl-svg" viewBox="0 0 720 380" role="img" aria-labelledby="pl-t">
+            <title id="pl-t">Two satellite paths cross at the centre. A dashed ring marks 1 km around the crossing. When your satellite fires, it slides along its path, and at the closest approach the gap between the two satellites is shown against the ring.</title>
+            <defs><radialGradient id="pl-glow"><stop offset="0" stop-color="#FFD673" stop-opacity="0.9"/><stop offset="1" stop-color="#FFD673" stop-opacity="0"/></radialGradient></defs>
+            <circle cx="360" cy="190" r="150" fill="none" stroke="var(--color-rule-2)"/>
+            <circle id="pl-ring" cx="360" cy="190" r="60" fill="color-mix(in oklab, var(--color-accent-2) 6%, transparent)" stroke="var(--color-accent-2)" stroke-dasharray="4 5"/>
+            <text class="pl-t" x="404" y="132" fill="var(--color-accent-2)">1 km</text>
+            <line class="pl-path" x1="150" y1="380" x2="570" y2="0" stroke="var(--color-accent-2)"/>
+            <line id="pl-mine" class="pl-path" x1="0" y1="178" x2="720" y2="178" stroke="var(--color-accent)"/>
+            <line id="pl-ghost" x1="0" y1="178" x2="0" y2="178" stroke="var(--color-accent)" stroke-width="3" stroke-linecap="round" opacity="0.5"/>
+            <line id="pl-gap" x1="360" y1="190" x2="360" y2="178" stroke="var(--color-ink)" stroke-dasharray="2 3" visibility="hidden"/>
+            <text id="pl-gap-t" class="pl-t pl-halo" x="0" y="0" fill="var(--color-ink)" visibility="hidden"></text>
+            <circle id="pl-flash" r="34" fill="url(#pl-glow)" opacity="0"/>
+            <g id="pl-other"><circle r="7" fill="var(--color-accent-2)"/></g>
+            <g id="pl-you"><circle r="8" fill="var(--color-accent)"/><circle r="13" fill="none" stroke="var(--color-accent)" stroke-opacity="0.4"/></g>
+            <text id="pl-off" class="pl-t pl-halo" x="708" y="164" text-anchor="end" fill="var(--color-accent)" visibility="hidden">further along →</text>
+            <g class="pl-t pl-halo" fill="var(--color-muted)"><text x="14" y="168">Your satellite →</text><text x="560" y="26" text-anchor="end">Other satellite ↗</text></g>
           </svg>
-          <p class="planner-early" id="p-early">Act 24 hours earlier and a 0.33 cm/s burn gives the same result: a burn 3.0 times smaller.</p>
-          <p class="planner-min muted" id="p-min">Smallest burn that clears 1 km at 12 h: 0.76 cm/s.</p>
+          <div class="pl-clock"><span class="label">Clock</span><span class="measure" id="pl-clock">T-12 h</span><span class="pl-event" id="pl-event"></span></div>
         </div>
+        <form class="pl-side" id="pl-form" aria-label="Maneuver planner" onsubmit="return false">
+          <div class="slider">
+            <div class="slider-top"><label for="pl-lead">When do you fire?</label><output class="measure" for="pl-lead" id="pl-lead-out">12 h before</output></div>
+            <input type="range" id="pl-lead" min="1" max="72" step="1" value="12">
+            <p class="slider-range measure"><span>1 h before</span><span>3 days before</span></p>
+          </div>
+          <div class="slider">
+            <div class="slider-top"><label for="pl-dv">How hard?</label><output class="measure" for="pl-dv" id="pl-dv-out">1.0 cm/s</output></div>
+            <input type="range" id="pl-dv" min="0.2" max="10" step="0.1" value="1">
+            <p class="slider-range measure"><span>a whisper</span><span>a firm push</span></p>
+          </div>
+          <button class="btn btn--primary pl-play" type="button" id="pl-play">Play</button>
+          <div class="pl-result">
+            <div><span class="label">Gap at closest approach</span><span class="measure big-read" id="pl-sep">1.31 km</span></div>
+            <span class="status next" id="pl-verdict">Safe</span>
+          </div>
+          <p class="planner-early" id="pl-early">Fire 24 hours earlier and a 0.33 cm/s push does the same job: <b>3 times smaller</b>.</p>
+          <p class="planner-min muted" id="pl-min">Smallest push that clears 1 km at 12 h: 0.76 cm/s.</p>
+          <p class="visually-hidden" id="pl-live" aria-live="polite"></p>
+        </form>
       </div>
-      <p class="visually-hidden" id="p-live" aria-live="polite"></p>
-      <p class="planner-note">Illustrative orbital mechanics for a sample event. Not a screening or a maneuver recommendation.</p>
+      <p class="planner-note">Illustrative orbital mechanics for a sample event: a small push along the orbit moves where the satellite arrives by about 3 × push × time to closest approach. Not a screening or a maneuver recommendation.</p>
     </div>
   </section>
 
@@ -251,6 +336,16 @@
         <h2 id="gov-h">Neutral by design. Every action asks first.</h2>
         <p class="lead">Nothing moves without permission from the right party. If no answer comes, nothing is sent.</p>
         <p class="muted">Advice stays advice. The operator who owns the spacecraft makes the call.</p>
+        <svg class="gate" viewBox="0 -6 520 182" role="img" aria-label="Two requests. The first is checked, approved and sent. The second gets no answer, so nothing is sent.">
+          <g class="g-row"><rect class="g-box" x="4" y="14" width="120" height="40" rx="8"/><text x="64" y="39" text-anchor="middle">Request</text>
+            <path class="g-wire" d="M124 34 H 200"/><circle class="g-check" cx="234" cy="34" r="34"/><text x="234" y="38" text-anchor="middle" class="g-small">Permission</text>
+            <path class="g-wire" d="M260 34 H 380"/><rect class="g-box g-ok" x="380" y="14" width="136" height="40" rx="8"/><text x="448" y="39" text-anchor="middle">Sent ✓</text>
+            <circle class="g-dot g-dot--ok" r="5" cx="124" cy="34"/></g>
+          <g class="g-row" transform="translate(0 92)"><rect class="g-box" x="4" y="14" width="120" height="40" rx="8"/><text x="64" y="39" text-anchor="middle">Request</text>
+            <path class="g-wire" d="M124 34 H 200"/><circle class="g-check g-silent" cx="234" cy="34" r="34"/><text x="234" y="38" text-anchor="middle" class="g-small">No answer</text>
+            <path class="g-wire g-cut" d="M260 34 H 380"/><rect class="g-box g-no" x="380" y="14" width="136" height="40" rx="8"/><text x="448" y="39" text-anchor="middle">Nothing sent</text>
+            <circle class="g-dot g-dot--no" r="5" cx="124" cy="34"/></g>
+        </svg>
       </div>
       <ul class="principles card" data-stagger>
         <li><span class="measure">Never flies a spacecraft</span><span>Operators command their own vehicles.</span></li>
@@ -269,11 +364,11 @@
         <p>Five groups, one layer. Each one gets what it needs from the same record.</p>
       </div>
       <div class="who" data-stagger>
-        <article class="card"><span class="measure n">01</span><h3>Spacecraft operators</h3><p>Coordination for every spacecraft you fly, from a single satellite to a full constellation.</p></article>
-        <article class="card"><span class="measure n">02</span><h3>Government and civil agencies</h3><p>Available through established government procurement vehicles.</p></article>
-        <article class="card"><span class="measure n">03</span><h3>Data suppliers</h3><p>Plug in as a verified conjunction assessment provider. No operator disruption on substitution.</p></article>
-        <article class="card"><span class="measure n">04</span><h3>Regulators and insurers</h3><p>Auditable coordination logs for compliance and liability as space traffic rules mature.</p></article>
-        <article class="card"><span class="measure n">05</span><h3>Commodity funds and traders</h3><p>LoqSat Earth Signals: weekly measurements of the Brazil sugar cane harvest from free satellite imagery.</p></article>
+        <article class="card"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="6" height="6" rx="1"/><path d="M3 10h5v4H3zM16 10h5v4h-5zM12 9V6M10 6h4"/></svg></span><span class="measure n">01</span><h3>Spacecraft operators</h3><p>Coordination for every spacecraft you fly, from a single satellite to a full constellation.</p></article>
+        <article class="card"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V10M19 21V10M9 21V10M15 21V10M3 10l9-6 9 6z"/></svg></span><span class="measure n">02</span><h3>Government and civil agencies</h3><p>Available through established government procurement vehicles.</p></article>
+        <article class="card"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 15a7 7 0 0 1 7-7"/><path d="M4 20l5-5"/><circle cx="10" cy="14" r="1.5"/><path d="M13 4a7 7 0 0 1 7 7M13 8a3 3 0 0 1 3 3"/></svg></span><span class="measure n">03</span><h3>Data suppliers</h3><p>Plug in as a verified conjunction assessment provider. No operator disruption on substitution.</p></article>
+        <article class="card"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg></span><span class="measure n">04</span><h3>Regulators and insurers</h3><p>Auditable coordination logs for compliance and liability as space traffic rules mature.</p></article>
+        <article class="card"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 20h18"/><path d="M5 16l4-5 4 3 6-8"/><path d="M15 6h4v4"/></svg></span><span class="measure n">05</span><h3>Commodity funds and traders</h3><p>LoqSat Earth Signals: weekly measurements of the Brazil sugar cane harvest from orbit.</p></article>
       </div>
     </div>
   </section>
@@ -298,27 +393,22 @@
     <div class="container">
       <div class="section-head" data-reveal>
         <h2 id="signals-h">LoqSat Earth Signals. What orbit sees before the market does.</h2>
-        <p>The same orbit, pointed at the ground. We measure the Brazil sugar cane harvest from free satellite imagery every week, with history back to 2015.</p>
+        <p>The same orbit, pointed at the ground. We measure the Brazil sugar cane harvest from orbit every week, as it happens.</p>
       </div>
       <div class="signals-grid">
         <figure class="photo" data-reveal data-parallax>
-          <img src="cane.jpg" width="1600" height="1000" loading="lazy" alt="Sugar cane fields east of Ribeirão Preto, Brazil, seen straight down by Sentinel-2. Pale blocks are freshly cut fields.">
-          <figcaption class="meta">
-            <div><span class="label">Site</span><span class="measure">21.2287° S, 47.4858° W</span></div>
-            <div><span class="label">Captured</span><span class="measure">31 Aug 2024, 13:28 UTC</span></div>
-            <div><span class="label">Sensor</span><span class="measure">Sentinel-2B, 10 m</span></div>
-          </figcaption>
+          <img src="cane.jpg" width="1600" height="1000" loading="lazy" alt="Sugar cane fields in Brazil, seen straight down from orbit. Pale blocks are freshly cut fields.">
         </figure>
         <div class="signal-list" data-reveal="2">
           <div class="signal-top">
             <p class="signal-status"><span class="status now">First signal</span></p>
             <h3>Brazil sugar cane harvest</h3>
-            <p class="signal-lead">The share of standing cane cut so far, read field by field from every clear Sentinel-2 look, about every 5 days.</p>
+            <p class="signal-lead">The share of standing cane cut so far, measured from orbit and delivered every week.</p>
           </div>
           <dl class="signal-points">
             <div><dt class="label">Why it matters</dt><dd>Brazil’s Centre-South is the world’s largest sugar cane region. How fast it is harvested moves sugar and ethanol prices, and the official crush reports arrive only twice a month, after the fields are cut.</dd></div>
-            <div><dt class="label">What you get</dt><dd>A weekly number and chart, the data files behind it, and history back to 2015.</dd></div>
-            <div><dt class="label">Where it stands</dt><dd>Prototype on one Sentinel-2 tile east of Ribeirão Preto, 2024 season. Validation against the official crush reports is in progress.</dd></div>
+            <div><dt class="label">What you get</dt><dd>A weekly number and chart, the data files behind it, and a multi-year history to test against.</dd></div>
+            <div><dt class="label">Where it stands</dt><dd>Prototype today. Validation is in progress before the first paid release.</dd></div>
           </dl>
           <a class="btn" href="signals.html">See the sugar cane signal</a>
         </div>
@@ -327,7 +417,7 @@
         <div class="card"><h3>Data files</h3><p>CSV or Parquet each week, delivered to your bucket or SFTP.</p></div>
         <div class="card"><h3>Weekly brief</h3><p>A short PDF with the numbers, the images and what changed.</p></div>
         <div class="card"><h3>Methodology</h3><p>How every number is made, so your team can check it.</p></div>
-        <div class="card"><h3>Try it free</h3><p>A history sample back to 2015 and a 30 to 90 day live trial.</p></div>
+        <div class="card"><h3>Try it free</h3><p>A history sample and a 30 to 90 day live trial.</p></div>
       </div>
       <form class="newsletter card" data-reveal action="https://formspree.io/f/xeelnkqj" method="POST">
         <div><h3>Get the free weekly teaser</h3><p class="muted">One chart from Earth Signals every week. No spam, unsubscribe any time.</p></div>
@@ -378,6 +468,7 @@
 <script src="data/sats.js"></script>
 <script src="globe3d.js"></script>
 <script src="site.js"></script>
+<script src="scenes.js"></script>
 <script>
 document.querySelectorAll('form[action]').forEach((f) => f.addEventListener('submit', async (e) => {
   e.preventDefault();
